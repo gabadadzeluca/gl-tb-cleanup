@@ -43,8 +43,26 @@ def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def remove_noncash_transactions(df: pd.DataFrame) -> pd.DataFrame:
+    #Remove rows where both debit and credit accounts do not start with '1'
+    debit_geo  = COLUMNS_TO_KEEP["acc_debit"]
+    credit_geo = COLUMNS_TO_KEEP["acc_credit"]
+
+    mask_prev= (
+      df[debit_geo].astype(str).str.startswith(('11','12')) |
+      df[credit_geo].astype(str).str.startswith(('11','12'))
+    )
+    mask_both_cash = (
+      df[debit_geo].astype(str).str.startswith(('11', '12')) &
+      df[credit_geo].astype(str).str.startswith(('11', '12'))  
+    )
+    mask_final = mask_prev & ~mask_both_cash
+    return df[mask_final]
+
+
 def process_gl(df: pd.DataFrame) -> pd.DataFrame:
     df = filter_columns(df)
     df = parse_dates(df)
     df = add_left_account_codes(df)
+    df = remove_noncash_transactions(df)
     return df
