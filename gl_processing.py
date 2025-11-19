@@ -27,7 +27,7 @@ def parse_dates(df: pd.DataFrame) -> pd.DataFrame:
         df[date_geo].astype(str).str.strip(),
         format="%d/%m/%Y",
         errors="coerce"
-    )
+    ).dt.date
 
     return df
 
