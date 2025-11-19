@@ -1,15 +1,21 @@
-import pandas as pd
+from gl_processing import load_excel, process_gl
+
+RAW_GL_FILENAME = "GL.xlsx"
+
 
 def main():
-    print("Python environment is working!")
 
-    # Try reading an Excel file (create a dummy one later if needed)
     try:
-        df = pd.read_excel("raw_GL.xlsx")
+        df = load_excel(RAW_GL_FILENAME)
         print("Excel loaded successfully!")
+
+        df = process_gl(df)
+
         print(df.head())
-    except FileNotFoundError:
-        print("raw_GL.xlsx not found. Place your GL file in the same folder as main.py")
+
+    except FileNotFoundError as e:
+        print(e)
+
 
 if __name__ == "__main__":
     main()
