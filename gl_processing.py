@@ -3,7 +3,6 @@ from columns_to_keep import COLUMNS_TO_KEEP
 
 
 def load_excel(filename: str) -> pd.DataFrame:
-    """Load Excel file safely."""
     try:
         return pd.read_excel(filename)
     except FileNotFoundError:
@@ -11,7 +10,7 @@ def load_excel(filename: str) -> pd.DataFrame:
 
 
 def filter_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """Keep only columns defined in COLUMNS_TO_KEEP."""
+    #Keep only columns defined in COLUMNS_TO_KEEP
     existing_cols = {
         eng: geo for eng, geo in COLUMNS_TO_KEEP.items()
         if geo in df.columns
@@ -20,7 +19,7 @@ def filter_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def parse_dates(df: pd.DataFrame) -> pd.DataFrame:
-    """Convert date column to datetime if it exists."""
+    #Convert date column to datetime original format DD/MM/YYYY
     date_geo = COLUMNS_TO_KEEP.get("date")
 
     if date_geo in df.columns:
@@ -34,7 +33,7 @@ def parse_dates(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
-    """Add DR_left and CR_left based on first 4 characters."""
+    #Add DR_left and CR_left based on first 4 characters.
     debit_geo  = COLUMNS_TO_KEEP["acc_debit"]
     credit_geo = COLUMNS_TO_KEEP["acc_credit"]
 
@@ -45,7 +44,6 @@ def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def process_gl(df: pd.DataFrame) -> pd.DataFrame:
-    """Full pipeline."""
     df = filter_columns(df)
     df = parse_dates(df)
     df = add_left_account_codes(df)
