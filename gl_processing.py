@@ -37,8 +37,8 @@ def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
     debit_geo  = COLUMNS_TO_KEEP["acc_debit"]
     credit_geo = COLUMNS_TO_KEEP["acc_credit"]
 
-    df["DR_left"] = df[debit_geo].astype(str).str[:4]
-    df["CR_left"] = df[credit_geo].astype(str).str[:4]
+    df.loc[:, "DR_left"] = df[debit_geo].astype(str).str[:4]
+    df.loc[:, "CR_left"] = df[credit_geo].astype(str).str[:4]
 
     return df
 
