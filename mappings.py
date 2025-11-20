@@ -1,23 +1,5 @@
 # file to store the CF mappings dr left and cr left
 
-# Each rule: (dr_prefix, cr_prefix, mapping)
-# MAPPINGS = {
-#     #Cash Dr:
-#     ("1", "14"): "Cash receipts from customers",
-#     ("1", "1820"): "Interest received",
-#     ("1", "311"): "Cash return from paid to suppliers", #3110, 3111
-#     ("1", "3130"): "Cash return from paid to employees",
-#     ("1", "3131"): "Cash return from paid to employees",
-#     ("1", "3132"): "Cash return from paid to suppliers",
-#     ("1", "33"): "Cash return from taxes paid",
-#     ("1", "4110"): "Proceeds from borrowings",
-#     ("1", "8235"): "Exchange rate gain",
-#     ("1", "8235"): "Exchange rate gain",
-
-
-# }
-
-# Each rule: (dr_prefix, cr_prefix, mapping)
 """NEEDS PPE MAPPINGS"""
 MAPPINGS = {
     #Cash Dr:
@@ -44,6 +26,7 @@ MAPPINGS = {
 
 }
 
+# Each rule: (dr_prefix, cr_prefix, mapping)
 LOOKUP_MAP = {
     (str(dr).strip(), str(cr).strip()): mapping
     for mapping, pairs in MAPPINGS.items()
