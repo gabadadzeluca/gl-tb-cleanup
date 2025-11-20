@@ -59,10 +59,19 @@ def remove_noncash_transactions(df: pd.DataFrame) -> pd.DataFrame:
     mask_final = mask_prev & ~mask_both_cash
     return df[mask_final]
 
+def add_grouping_column(df: pd.DataFrame) -> pd.DataFrame:
+     # Insert an empty column at position 0 (first column)
+    df.insert(0, "Grouping", "") #empty string for now
+
+    #add lookup here later
+
+    return df
+
 
 def process_gl(df: pd.DataFrame) -> pd.DataFrame:
     df = filter_columns(df)
     df = parse_dates(df)
     df = add_left_account_codes(df)
     df = remove_noncash_transactions(df)
+    df = add_grouping_column(df)
     return df
