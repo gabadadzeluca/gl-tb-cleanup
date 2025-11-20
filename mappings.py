@@ -1,27 +1,26 @@
 # file to store the CF mappings dr left and cr left
 
 # Each rule: (dr_prefix, cr_prefix, mapping)
-MAPPINGS = {
-    #Cash Dr:
-    ("1", "14"): "Cash receipts from customers",
-    ("1", "1820"): "Interest received",
-    ("1", "311"): "Cash return from paid to suppliers", #3110, 3111
-    ("1", "3130"): "Cash return from paid to employees",
-    ("1", "3131"): "Cash return from paid to employees",
-    ("1", "3132"): "Cash return from paid to suppliers",
-    ("1", "33"): "Cash return from taxes paid",
-    ("1", "4110"): "Proceeds from borrowings",
-    ("1", "8235"): "Exchange rate gain",
-    ("1", "8235"): "Exchange rate gain",
+# MAPPINGS = {
+#     #Cash Dr:
+#     ("1", "14"): "Cash receipts from customers",
+#     ("1", "1820"): "Interest received",
+#     ("1", "311"): "Cash return from paid to suppliers", #3110, 3111
+#     ("1", "3130"): "Cash return from paid to employees",
+#     ("1", "3131"): "Cash return from paid to employees",
+#     ("1", "3132"): "Cash return from paid to suppliers",
+#     ("1", "33"): "Cash return from taxes paid",
+#     ("1", "4110"): "Proceeds from borrowings",
+#     ("1", "8235"): "Exchange rate gain",
+#     ("1", "8235"): "Exchange rate gain",
 
 
-}
+# }
 
 # Each rule: (dr_prefix, cr_prefix, mapping)
+"""NEEDS PPE MAPPINGS"""
 MAPPINGS = {
     #Cash Dr:
-    """NEEDS PPE MAPPINGS"""
-
     "Cash return from paid to suppliers": [("1", "1430"), ("1", "1480")],
     "Cash return from taxes paid": [("1", "33")],
 
@@ -40,7 +39,14 @@ MAPPINGS = {
 
     #Cash Cr:
     "Cash paid to suppliers": [("1430", "1"), ("1480", "1"), ("311", "1"), ("3190", "1"), ("7190", "1"), ("8420", "1"), ("8440", "1"),],
-    "Cash paid to employees": [("3130", "1"), ("3131", "1"), ("")],
+    "Cash paid to employees": [("3130", "1"), ("3131", "1")],
 
 
+}
+
+LOOKUP_MAP = {
+    (str(dr).strip(), str(cr).strip()): mapping
+    for mapping, pairs in MAPPINGS.items()
+    for dr, cr in pairs
+    if dr and cr  # skip empty entries
 }
