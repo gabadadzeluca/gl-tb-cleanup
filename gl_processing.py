@@ -31,6 +31,18 @@ def parse_dates(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+def insert_after(df: pd.DataFrame, after_col: str, new_col: str, values):
+    # create or update the column
+    df[new_col] = values  
+
+    # reorder: remove column and re-insert at correct position
+    cols = list(df.columns)
+    cols.remove(new_col)
+    idx = cols.index(after_col) + 1
+    cols.insert(idx, new_col)
+
+    df = df[cols]
+    return df
 
 def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
     #Add DR_left and CR_left based on first 4 characters.
@@ -39,6 +51,9 @@ def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
 
     df.loc[:, "DR_left"] = df[debit_geo].astype(str).str[:4]
     df.loc[:, "CR_left"] = df[credit_geo].astype(str).str[:4]
+
+    df = insert_after(df, debit_geo, "DR_left", df["DR_left"])
+    df = insert_after(df, credit_geo, "CR_left", df["CR_left"])
 
     return df
 
