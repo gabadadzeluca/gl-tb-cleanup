@@ -2,35 +2,6 @@ import pandas as pd
 from columns_to_keep import COLUMNS_GL
 from common.cleanup import clean_df
 
-def load_excel(filename: str) -> pd.DataFrame:
-    try:
-        return pd.read_excel(filename)
-    except FileNotFoundError:
-        raise FileNotFoundError(f"{filename} not found.")
-
-
-# def filter_columns(df: pd.DataFrame) -> pd.DataFrame:
-#     #Keep only columns defined in COLUMNS_GL
-#     existing_cols = {
-#         eng: geo for eng, geo in COLUMNS_GL.items()
-#         if geo in df.columns
-#     }
-#     return df[list(existing_cols.values())]
-
-
-# def parse_dates(df: pd.DataFrame) -> pd.DataFrame:
-#     #Convert date column to datetime original format DD/MM/YYYY
-#     date_geo = COLUMNS_GL.get("date")
-
-#     if date_geo in df.columns:
-#         df[date_geo] = pd.to_datetime(
-#         df[date_geo].astype(str).str.strip(),
-#         format="%d/%m/%Y",
-#         errors="coerce"
-#     ).dt.date
-
-#     return df
-
 def insert_after(df: pd.DataFrame, after_col: str, new_col: str, values):
     # create or update the column
     df[new_col] = values  
@@ -79,14 +50,7 @@ def add_grouping_column(df: pd.DataFrame) -> pd.DataFrame:
     df.insert(0, "Grouping", "") #empty string for now
     return df
 
-# def add_month_column(df: pd.DataFrame) -> pd.DataFrame:
-#     date_geo = COLUMNS_GL.get("date")
-#     if date_geo in df.columns:
-#         df["Month"] = pd.to_datetime(df[date_geo]).dt.month
-#     return df
-
 # TODO CHECKS FOR NEGATIVE VALUES 
-
 
 def process_gl(df: pd.DataFrame) -> pd.DataFrame:
     df = clean_df(df, col_map=COLUMNS_GL)
