@@ -92,7 +92,7 @@ def clean_df(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
     df = filter_columns(df, col_map)
     df = parse_dates(df, col_map)
     df = add_month_column(df, col_map)
-    df = add_left_account_codes(df) #GL ONLY (partially)
-    df = remove_noncash_transactions(df) #GL ONLY
+    df = add_left_account_codes(df, col_map) #GL ONLY (partially)
+    df = remove_noncash_transactions(df, col_map) #GL ONLY
     df = add_grouping_column(df) #GL ONLY
     return df
