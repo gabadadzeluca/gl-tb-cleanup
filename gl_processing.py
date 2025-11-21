@@ -77,10 +77,9 @@ def remove_noncash_transactions(df: pd.DataFrame) -> pd.DataFrame:
 def add_grouping_column(df: pd.DataFrame) -> pd.DataFrame:
      # Insert an empty column at position 0 (first column)
     df.insert(0, "Grouping", "") #empty string for now
-
-    #add lookup here later
-
     return df
+
+# TODO CHECKS FOR NEGATIVE VALUES 
 
 
 def process_gl(df: pd.DataFrame) -> pd.DataFrame:
