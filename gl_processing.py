@@ -79,6 +79,12 @@ def add_grouping_column(df: pd.DataFrame) -> pd.DataFrame:
     df.insert(0, "Grouping", "") #empty string for now
     return df
 
+def add_month_column(df: pd.DataFrame) -> pd.DataFrame:
+    date_geo = COLUMNS_TO_KEEP.get("date")
+    if date_geo in df.columns:
+        df["Month"] = pd.to_datetime(df[date_geo]).dt.month
+    return df
+
 # TODO CHECKS FOR NEGATIVE VALUES 
 
 
@@ -88,4 +94,5 @@ def process_gl(df: pd.DataFrame) -> pd.DataFrame:
     df = add_left_account_codes(df)
     df = remove_noncash_transactions(df)
     df = add_grouping_column(df)
+    df = add_month_column(df)
     return df
