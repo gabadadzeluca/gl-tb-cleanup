@@ -12,7 +12,7 @@ COLUMNS_GL = {
 # Needs to be updated to a RAW TB TODO
 # Version 1
 COLUMNS_TB = {
-    "acc": "ანგარიში",
+    "acc": "ანგარიში +", # Needs to be checked if that is the case for each TB
     "name": "დასახელება",
     "start_dr": "საწყისი/დებეტი",
     "start_cr": "საწყისი/კრედიტი",
