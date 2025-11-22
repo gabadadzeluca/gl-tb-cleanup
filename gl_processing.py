@@ -19,6 +19,8 @@ def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
     #Add DR_left and CR_left based on first 4 characters.
     debit_geo  = COLUMNS_GL["acc_debit"]
     credit_geo = COLUMNS_GL["acc_credit"]
+    
+    df = df.copy() # copy to prevent an error
 
     df.loc[:, "DR_left"] = df[debit_geo].astype(str).str[:4]
     df.loc[:, "CR_left"] = df[credit_geo].astype(str).str[:4]
