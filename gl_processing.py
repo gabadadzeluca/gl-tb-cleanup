@@ -2,35 +2,6 @@ import pandas as pd
 from columns_to_keep import COLUMNS_GL
 from common.cleanup import clean_df
 
-def insert_after(df: pd.DataFrame, after_col: str, new_col: str, values):
-    # create or update the column
-    df[new_col] = values  
-
-    # reorder: remove column and re-insert at correct position
-    cols = list(df.columns)
-    cols.remove(new_col)
-    idx = cols.index(after_col) + 1
-    cols.insert(idx, new_col)
-
-    df = df[cols]
-    return df
-
-def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
-    #Add DR_left and CR_left based on first 4 characters.
-    debit_geo  = COLUMNS_GL["acc_debit"]
-    credit_geo = COLUMNS_GL["acc_credit"]
-    
-    df = df.copy() # copy to prevent an error
-
-    df.loc[:, "DR_left"] = df[debit_geo].astype(str).str[:4]
-    df.loc[:, "CR_left"] = df[credit_geo].astype(str).str[:4]
-
-    df = insert_after(df, debit_geo, "DR_left", df["DR_left"])
-    df = insert_after(df, credit_geo, "CR_left", df["CR_left"])
-
-    return df
-
-
 def remove_noncash_transactions(df: pd.DataFrame) -> pd.DataFrame:
     #Remove rows where both debit and credit accounts do not start with '1'
     debit_geo  = COLUMNS_GL["acc_debit"]
@@ -54,9 +25,37 @@ def add_grouping_column(df: pd.DataFrame) -> pd.DataFrame:
 
 # TODO CHECKS FOR NEGATIVE VALUES 
 
+def insert_after(df: pd.DataFrame, after_col: str, new_col: str, values):
+    # create or update the column
+    df[new_col] = values  
+
+    # reorder: remove column and re-insert at correct position
+    cols = list(df.columns)
+    cols.remove(new_col)
+    idx = cols.index(after_col) + 1
+    cols.insert(idx, new_col)
+
+    df = df[cols]
+    return df
+
+def add_left_account_codes(df: pd.DataFrame, col_map:dict[str, str]) -> pd.DataFrame:
+    df = df.copy() # copy to prevent an error
+    
+    # add DR_left and CR_left based on first 4 characters.
+    debit_geo  = col_map["acc_debit"]
+    credit_geo = col_map["acc_credit"]
+
+    df.loc[:, "DR_left"] = df[debit_geo].astype(str).str[:4]
+    df.loc[:, "CR_left"] = df[credit_geo].astype(str).str[:4]
+
+    df = insert_after(df, debit_geo, "DR_left", df["DR_left"])
+    df = insert_after(df, credit_geo, "CR_left", df["CR_left"])
+
+    return df
+
 def process_gl(df: pd.DataFrame) -> pd.DataFrame:
     df = clean_df(df, col_map=COLUMNS_GL)
-    df = add_left_account_codes(df)
+    df = add_left_account_codes(df, COLUMNS_GL)
     df = remove_noncash_transactions(df)
     df = add_grouping_column(df)
     return df
