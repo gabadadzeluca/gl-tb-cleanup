@@ -7,7 +7,6 @@ def load_excel(filename: str) -> pd.DataFrame:
     except FileNotFoundError:
         raise FileNotFoundError(f"{filename} not found.")
 
-
 def filter_columns(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
     #Keep only columns defined in COLUMNS_TO_KEEP
     existing_cols = {
