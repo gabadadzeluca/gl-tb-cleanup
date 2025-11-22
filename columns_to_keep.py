@@ -10,12 +10,24 @@ COLUMNS_GL = {
 }
 
 # Needs to be updated to a RAW TB TODO
+# Version 1
 COLUMNS_TB = {
-    "date": "თარიღი",
     "acc": "ანგარიში",
     "name": "დასახელება",
-    "start_balance": "საწყისი ნაშთი",
+    "start_dr": "საწყისი/დებეტი",
+    "start_cr": "საწყისი/კრედიტი",
     "movement_dr": "ბრუნვა/დებეტი",
     "movement_cr": "ბრუნვა/კრედიტი",
-    "end_balance": "საბოლოო ნაშთი",
+    "end_dr": "საბოლოო/დებეტი",
+    "end_cr": "საბოლოო/კრედიტი"
 }
+
+# Version 2, where there is no single column for balances
+# COLUMNS_TB = {
+#     "acc": "ანგარიში",
+#     "name": "დასახელება",
+#     "start_balance": "საწყისი ნაშთი",
+#     "movement_dr": "ბრუნვა/დებეტი",
+#     "movement_cr": "ბრუნვა/კრედიტი",
+#     "end_balance": "საბოლოო ნაშთი",
+# }
