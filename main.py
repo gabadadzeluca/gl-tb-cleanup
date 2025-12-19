@@ -16,7 +16,6 @@ def main():
         print("Excel loaded successfully!")
 
         gl_df = process_gl(gl_df)
-        # gl_df = add_groupings(gl_df)
         
         """TB processing"""
         tb_df = load_excel(RAW_TB_FILENAME)

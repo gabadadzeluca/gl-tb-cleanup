@@ -3,7 +3,7 @@ from columns_to_keep import COLUMNS_GL
 from common.cleanup import clean_df
 
 def add_grouping_column(df: pd.DataFrame) -> pd.DataFrame:
-     # Insert an empty column at position 0 (first column)
+    # Insert an empty column at position 0 (first column)
     df.insert(0, "Grouping", "") #empty string for now
     return df
 
