@@ -29,11 +29,6 @@ def parse_dates(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
 
     return df
 
-def add_grouping_column(df: pd.DataFrame) -> pd.DataFrame:
-     # Insert an empty column at position 0 (first column)
-    df.insert(0, "Grouping", "") #empty string for now
-    return df
-
 def add_month_column(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
     date_geo = col_map.get("date")
     if date_geo in df.columns:
