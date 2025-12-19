@@ -3,8 +3,6 @@ from gl_processing import process_gl
 from tb_processing import process_tb
 from common.cleanup import load_excel
 
-RAW_GL_FILENAME = "GL.xlsx"
-RAW_TB_FILENAME = "TB.xlsx"
 OUTPUT_FILENAME = "Processed_output.xlsx"
 
 
@@ -14,13 +12,13 @@ def main(file_paths):
 
         gl_file, tb_file = file_paths
         """GL processing"""
-        gl_df = load_excel(RAW_GL_FILENAME)
+        gl_df = load_excel(gl_file)
         print("Excel loaded successfully!")
 
         gl_df = process_gl(gl_df)
         
         """TB processing"""
-        tb_df = load_excel(RAW_TB_FILENAME)
+        tb_df = load_excel(tb_file)
         tb_df = process_tb(tb_df)
 
         # ---- SAVE BOTH TO SAME WORKBOOK ----
