@@ -2,22 +2,6 @@ import pandas as pd
 from columns_to_keep import COLUMNS_GL
 from common.cleanup import clean_df
 
-def remove_noncash_transactions(df: pd.DataFrame) -> pd.DataFrame:
-    #Remove rows where both debit and credit accounts do not start with '1'
-    debit_geo  = COLUMNS_GL["acc_debit"]
-    credit_geo = COLUMNS_GL["acc_credit"]
-
-    mask_prev= (
-      df[debit_geo].astype(str).str.startswith(('11','12')) |
-      df[credit_geo].astype(str).str.startswith(('11','12'))
-    )
-    mask_both_cash = (
-      df[debit_geo].astype(str).str.startswith(('11', '12')) &
-      df[credit_geo].astype(str).str.startswith(('11', '12'))  
-    )
-    mask_final = mask_prev & ~mask_both_cash
-    return df[mask_final]
-
 def add_grouping_column(df: pd.DataFrame) -> pd.DataFrame:
      # Insert an empty column at position 0 (first column)
     df.insert(0, "Grouping", "") #empty string for now
@@ -56,6 +40,5 @@ def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
 def process_gl(df: pd.DataFrame) -> pd.DataFrame:
     df = clean_df(df, col_map=COLUMNS_GL)
     df = add_left_account_codes(df)
-    df = remove_noncash_transactions(df)
     df = add_grouping_column(df)
     return df
