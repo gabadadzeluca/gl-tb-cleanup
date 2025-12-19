@@ -38,12 +38,12 @@ def insert_after(df: pd.DataFrame, after_col: str, new_col: str, values):
     df = df[cols]
     return df
 
-def add_left_account_codes(df: pd.DataFrame, col_map:dict[str, str]) -> pd.DataFrame:
+def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy() # copy to prevent an error
     
     # add DR_left and CR_left based on first 4 characters.
-    debit_geo  = col_map["acc_debit"]
-    credit_geo = col_map["acc_credit"]
+    debit_geo  = COLUMNS_GL["acc_debit"]
+    credit_geo = COLUMNS_GL["acc_credit"]
 
     df.loc[:, "DR_left"] = df[debit_geo].astype(str).str[:4]
     df.loc[:, "CR_left"] = df[credit_geo].astype(str).str[:4]
@@ -55,7 +55,7 @@ def add_left_account_codes(df: pd.DataFrame, col_map:dict[str, str]) -> pd.DataF
 
 def process_gl(df: pd.DataFrame) -> pd.DataFrame:
     df = clean_df(df, col_map=COLUMNS_GL)
-    df = add_left_account_codes(df, COLUMNS_GL)
+    df = add_left_account_codes(df)
     df = remove_noncash_transactions(df)
     df = add_grouping_column(df)
     return df
