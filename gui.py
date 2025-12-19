@@ -24,7 +24,7 @@ while True:
     if event in (sg.WINDOW_CLOSED, "exit_btn"):
         break
 
-    if event == "Process":
+    if event == "process_both":
         file_paths = values["file_paths"].split(";")  # split string into list
         if len(file_paths) != 2:
             sg.popup("Please select exactly 2 files: GL and TB Excel files.")
