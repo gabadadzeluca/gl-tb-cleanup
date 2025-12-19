@@ -2,16 +2,26 @@ import FreeSimpleGUI as sg
 from main import main
 
 layout = [
-    [sg.Text("Select GL and TB Excel Files:", size=(30,1))],
-    [sg.Input(key="file_paths", enable_events=True, size=(50,1)), sg.FilesBrowse("Browse")],
-    [sg.Button("Process", size=(10,1)), sg.Button("Exit", size=(10,1))]
+    [sg.Text("Select GL and/or TB Excel Files:", size=(30,1))],
+    [sg.FilesBrowse(
+        "Upload Files", 
+        key="file_paths", 
+        file_types=(("Excel Files", "*.xlsx"),),  
+        size=(50,1)
+    )],
+    [sg.Text("", key="status", size=(50,1), text_color="green")],  # optional status line
+    [sg.Frame("Process Options", [
+        [sg.Button("Process TB & GL", size=(15,1), key="process_both")],
+        [sg.Button("Process TB", size=(15,1), key="process_tb"), sg.Button("Process GL", size=(15,1), key="process_gl")]
+    ])],
+    [sg.Button("Exit", size=(10,1), key="exit_btn")]
 ]
 
-window = sg.Window("Excel Processor", layout)
+window = sg.Window("Excel Processor", layout,  background_color="")
 
 while True:
     event, values = window.read()
-    if event in (sg.WINDOW_CLOSED, "Exit"):
+    if event in (sg.WINDOW_CLOSED, "exit_btn"):
         break
 
     if event == "Process":
