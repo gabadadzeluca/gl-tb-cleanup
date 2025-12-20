@@ -7,7 +7,7 @@ from common.cleanup import load_excel
 def main(file_path, isGL, filename=""):   
     #Optional file (comapny name)     
     gl_file, tb_file = None, None
-    OUTPUT_FILENAME = f"TB-{filename}.xlsx"
+    OUTPUT_FILENAME = f"TB-{filename}.xlsx" if filename else "TB-cleaned.xlsx"
 
     try:
         if(isGL):
@@ -15,7 +15,7 @@ def main(file_path, isGL, filename=""):
             gl_file = file_path
             gl_df = load_excel(gl_file)
             gl_df = process_gl(gl_df)
-            OUTPUT_FILENAME = f"GL-{filename}.xlsx"
+            OUTPUT_FILENAME = f"GL-{filename}.xlsx" if filename else "GL-cleaned.xlsx"
         else:
             """TB processing"""
             tb_file = file_path
