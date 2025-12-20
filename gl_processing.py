@@ -10,8 +10,9 @@ def add_grouping_column(df: pd.DataFrame) -> pd.DataFrame:
 # TODO CHECKS FOR NEGATIVE VALUES 
 
 def insert_after(df: pd.DataFrame, after_col: str, new_col: str, values):
+    df = df.copy()  # avoid SettingWithCopyWarning
     # create or update the column
-    df[new_col] = values  
+    df[new_col] = values
 
     # reorder: remove column and re-insert at correct position
     cols = list(df.columns)

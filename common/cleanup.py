@@ -17,6 +17,7 @@ def filter_columns(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
 
 
 def parse_dates(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
+    df = df.copy()  # avoid SettingWithCopyWarning
     #Convert date column to datetime original format DD/MM/YYYY
     date_geo = col_map.get("date")
 
@@ -30,6 +31,7 @@ def parse_dates(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
     return df
 
 def add_month_column(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
+    df = df.copy()  # avoid SettingWithCopyWarning
     date_geo = col_map.get("date")
     if date_geo in df.columns:
         df["Month"] = pd.to_datetime(df[date_geo]).dt.month
