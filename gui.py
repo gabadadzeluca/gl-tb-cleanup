@@ -2,7 +2,7 @@ import FreeSimpleGUI as sg
 from main import main
 
 layout = [
-    [sg.Text("Select GL or TB Excel Files:", size=(30,1))],
+    [sg.Text("Select GL or TB Excel File:", size=(30,1))],
     [sg.FilesBrowse(
         "Upload File", 
         key="file_path", 
@@ -47,6 +47,6 @@ while True:
             sg.popup("Processing Complete!",
                     f"The clean Excel file is ready:\n{output_file}")
         except Exception as e:
-            sg.popup("Error", f"Processing failed:\n{e}")
+            sg.popup("Error", f"Processing failed:\n{e}\nPlease check the uploaded file and try again.")
 
 window.close()
