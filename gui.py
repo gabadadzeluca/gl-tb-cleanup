@@ -9,9 +9,7 @@ layout = [
         file_types=(("Excel Files", "*.xlsx"),),  
         size=(50,1)
     )],
-    [sg.Text("", key="status", size=(50,1), text_color="green")],  # optional status line
     [sg.Frame("Process Options", [
-        [sg.Button("Process TB & GL", size=(15,1), key="process_both")],
         [sg.Button("Process TB", size=(15,1), key="process_tb"), sg.Button("Process GL", size=(15,1), key="process_gl")]
     ])],
     [sg.Button("Exit", size=(10,1), key="exit_btn")]
@@ -24,16 +22,20 @@ while True:
     if event in (sg.WINDOW_CLOSED, "exit_btn"):
         break
 
-    if event == "process_both":
-        file_paths = values["file_paths"].split(";")  # split string into list
-        if len(file_paths) != 2:
-            sg.popup("Please select exactly 2 files: GL and TB Excel files.")
+    if event == "process_tb" or event == "process_gl":
+        # Split and remove empty paths
+        file_path = [p for p in values["file_paths"].split(";") if p.strip()]
+
+        if len(file_path) == 0:
+            sg.popup("Please select at least one Excel file.")
             continue
 
-        output_file = main(file_paths)
-        if output_file:
-            sg.popup("Processing Complete!", f"The combined Excel file is ready: {output_file}")
-        else:
-            sg.popup("Error", "Processing failed. Check your files.")
+        try:
+            output_file = main(file_path)
+            sg.popup("Processing Complete!",
+                    f"The clean Excel file is ready:\n{output_file}")
+        except Exception as e:
+            sg.popup("Error", f"Processing failed:\n{e}")
+
 
 window.close()
