@@ -48,7 +48,7 @@ while True:
         if values[GUI_KEYS.FILE_PATH]:
             filepaths = values[GUI_KEYS.FILE_PATH].split(";")
             
-            if(len(filepaths) == 0):
+            if(len(filepaths[0]) == 0):
                 sg.popup("Error", "No file selected. Please upload an Excel file.")
                 continue
             elif(len(filepaths) > 1):
@@ -77,8 +77,7 @@ while True:
         else:
             """ Single processing """
             isBoth = False
-            if(event == GUI_KEYS.PROCESS_GL):
-                isGL = True
+            isGL = (event == GUI_KEYS.PROCESS_GL)
 
         try:
             output_file = main(files, isGL, isBoth, output_name)
