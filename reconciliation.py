@@ -60,9 +60,30 @@ def col_letter(df, col_name):
     return get_column_letter(df.columns.get_loc(col_name) + 1)
 
 
-def add_reconciliation_formulas(ws, recon_df: pd.DataFrame) -> None:
-    for row_idx in range(START_ROW, START_ROW + len(recon_df)):
-      ...
+def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df) -> None:
+  first_data_row = START_ROW + 1
+  last_data_row = START_ROW + len(recon_df)
+  print("FIRST DATA ROW:", first_data_row, "\n last data row:", last_data_row)
+
+  account_col = col_letter(recon_df, "Account")
+  desc_col = col_letter(recon_df, "Description")
+  
+  tb_dr_col = col_letter(recon_df, "Movement DR (TB)")
+  tb_cr_col = col_letter(recon_df, "Movement CR (TB)")
+  gl_dr_col = col_letter(recon_df, "Movement DR (GL)")
+  gl_cr_col = col_letter(recon_df, "Movement CR (GL)")
+  
+  check_dr_col = col_letter(recon_df, "Check DR")
+  check_cr_col = col_letter(recon_df, "Check CR")
+
+  for r in range(first_data_row, last_data_row + 1):
+      # Description formula: VLOOKUP from TB first
+      tb_acc_col  = col_letter(tb_df, COLUMNS_TB["acc"])
+      tb_desc_col = col_letter(tb_df, COLUMNS_TB["name"])
+      tb_desc_idx = tb_df.columns.get_loc(COLUMNS_TB["name"]) - tb_df.columns.get_loc(COLUMNS_TB["acc"]) + 1
+      desc_formula = f'=IFERROR(VLOOKUP({account_col}{r},TB!${tb_acc_col}:${tb_desc_col},{tb_desc_idx}, FALSE),0)'
+      ws[f"{desc_col}{r}"] = desc_formula
+  
 
 
 def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
@@ -83,5 +104,5 @@ def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWri
 
 
     # 3. Inject Excel formulas
-    # add_reconciliation_formulas(ws, recon_df)
+    add_reconciliation_formulas(ws, recon_df, tb_df)
     return recon_df # test
