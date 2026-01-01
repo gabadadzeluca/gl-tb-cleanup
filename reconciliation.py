@@ -59,6 +59,11 @@ def format_excel(ws, recon_df: pd.DataFrame, company_name) -> None:
 def col_letter(df, col_name):
     return get_column_letter(df.columns.get_loc(col_name) + 1)
 
+def get_tb_movemenet(ws, direction: str, tb_df, account_col: str, tb_m_col: str, r: int) -> None:
+    # TB MovementColumn formula
+    m_col = col_letter(tb_df, COLUMNS_TB[f"movement_{direction}"])
+    tb_m_formula = f'=SUMIFS(TB!${m_col}:${m_col},TB!$A:$A,{account_col}{r})'
+    ws[f"{tb_m_col}{r}"] = tb_m_formula
 
 def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df) -> None:
   first_data_row = START_ROW + 1
@@ -84,15 +89,9 @@ def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df) -> None:
       desc_formula = f'=IFERROR(VLOOKUP({account_col}{r},TB!${tb_acc_col}:${tb_desc_col},{tb_desc_idx}, FALSE),0)'
       ws[f"{desc_col}{r}"] = desc_formula
 
-      # TB DR formula
-      tb_movement_dr_col = col_letter(tb_df, COLUMNS_TB["movement_dr"])
-      tb_dr_formula = f'=SUMIFS(TB!${tb_movement_dr_col}:${tb_movement_dr_col},TB!$A:$A,{account_col}{r})'
-      ws[f"{tb_dr_col}{r}"] = tb_dr_formula
-
-      # TB CR formula
-      tb_movement_cr_col = col_letter(tb_df, COLUMNS_TB["movement_cr"])
-      tb_cr_formula = f'=SUMIFS(TB!${tb_movement_cr_col}:${tb_movement_cr_col},TB!$A:$A,{account_col}{r})'
-      ws[f"{tb_cr_col}{r}"] = tb_cr_formula
+      # TB Movement formulas
+      get_tb_movemenet(ws, "dr", tb_df, account_col, tb_dr_col, r)
+      get_tb_movemenet(ws, "cr", tb_df, account_col, tb_cr_col, r)
 
 def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
 
