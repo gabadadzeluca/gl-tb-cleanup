@@ -114,6 +114,10 @@ def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> Non
       get_gl_movement(ws, "dr", gl_df, account_col,  gl_dr_col, r)
       get_gl_movement(ws, "cr", gl_df, account_col,  gl_cr_col, r)
 
+      # Check movements
+      ws[f"{check_dr_col}{r}"] = f"={tb_dr_col}{r}-{gl_dr_col}{r}"
+      ws[f"{check_cr_col}{r}"] = f"={tb_cr_col}{r}-{gl_cr_col}{r}"
+
 
 def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
 
