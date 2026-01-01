@@ -97,8 +97,6 @@ while True:
             print("BOTH PROCESSING")
             isBoth = True
             isGL = False
-
-            print(f"TB: {files.tb_path}, GL: {files.gl_path}")
             # error check so that both files are uploaded
             if(not files.tb_path or not files.gl_path):
                 sg.popup("Error", "Please upload both TB and GL files to process both.")
