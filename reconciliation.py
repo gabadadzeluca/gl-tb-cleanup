@@ -2,7 +2,7 @@ import pandas as pd
 from openpyxl.utils import get_column_letter
 from columns_to_keep import COLUMNS_GL
 from columns_to_keep import COLUMNS_TB
-
+from gl_processing import DR_LEFT, CR_LEFT
 
 START_ROW = 4  # leaves rows 1–3 free for headers
 SHEET_NAME = "TB&GL Reconciliation"
@@ -65,7 +65,25 @@ def get_tb_movemenet(ws, direction: str, tb_df, account_col: str, tb_m_col: str,
     tb_m_formula = f'=SUMIFS(TB!${m_col}:${m_col},TB!$A:$A,{account_col}{r})'
     ws[f"{tb_m_col}{r}"] = tb_m_formula
 
-def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df) -> None:
+def get_gl_movement(ws, direction: str, gl_df, account_col: str, target_col: str, r: int) -> None:
+    # Pick the correct column in GL based on direction
+    # DO not use GL_COLUMNS bc those left columns are manually added
+    if direction.lower() == "dr":
+        gl_account_col = col_letter(gl_df, DR_LEFT)
+    elif direction.lower() == "cr":
+        gl_account_col = col_letter(gl_df, CR_LEFT)
+
+    # GL Amount column
+    gl_amount_col = col_letter(gl_df, COLUMNS_GL["amount"])
+
+    gl_formula = (
+        f'=SUMIFS(GL!${gl_amount_col}:${gl_amount_col},'
+        f'GL!${gl_account_col}:${gl_account_col},{account_col}{r})'
+    )
+
+    ws[f"{target_col}{r}"] = gl_formula
+
+def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> None:
   first_data_row = START_ROW + 1
   last_data_row = START_ROW + len(recon_df)
   print("FIRST DATA ROW:", first_data_row, "\n last data row:", last_data_row)
@@ -93,6 +111,10 @@ def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df) -> None:
       get_tb_movemenet(ws, "dr", tb_df, account_col, tb_dr_col, r)
       get_tb_movemenet(ws, "cr", tb_df, account_col, tb_cr_col, r)
 
+      get_gl_movement(ws, "dr", gl_df, account_col,  gl_dr_col, r)
+      get_gl_movement(ws, "cr", gl_df, account_col,  gl_cr_col, r)
+
+
 def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
 
     # 1. Build the reconciliation base table (structure only)
@@ -111,5 +133,5 @@ def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWri
 
 
     # 3. Inject Excel formulas
-    add_reconciliation_formulas(ws, recon_df, tb_df)
+    add_reconciliation_formulas(ws, recon_df, tb_df, gl_df)
     return recon_df # test
