@@ -7,3 +7,4 @@ class GUI_KEYS:
     EXIT = "exit_btn"
     OUTPUT_NAME = "output_name"
     FILE_PATH = "file_path"
+    PROCESS_BOTH = "process_both"
