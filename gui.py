@@ -41,17 +41,18 @@ window = sg.Window("LedgerPrep", layout, element_justification="center")
 # to store uploaded files
 uploaded_files = []
 
+# Initialize File paths
+files = Files()
+files.tb_path = None
+files.gl_path = None
+
+
 while True:
     event, values = window.read()
     if event in (sg.WINDOW_CLOSED, GUI_KEYS.EXIT):
         break
 
-
-    # Initialize File paths
-    files = Files()
-    files.tb_path = None
-    files.gl_path = None
-
+    """Handle File Uploads"""
     if event == GUI_KEYS.FILE_PATH:
         print("EVENT CALLED")
        
@@ -71,16 +72,18 @@ while True:
         
         # Assign files based on names
         for file in uploaded_files:
-            lower_file = file.lower()
+            print("Processing a file:", file)
+            lower_file = file.lower().split("/")[-1]  # get the file name only in lowercase
             if "tb" in lower_file:
                 files.tb_path = file
-            elif "gl" in lower_file:
+            if "gl" in lower_file:
                 files.gl_path = file
 
-
+        print("TB PATH: ", files.tb_path, "GL PATH: ", files.gl_path)
         # Update the input field and Multiline display
         window[GUI_KEYS.UPLOADED_FILES].update("\n".join(uploaded_files))
 
+    """Handle Processing Events"""
     if event in [GUI_KEYS.PROCESS_BOTH, GUI_KEYS.PROCESS_GL, GUI_KEYS.PROCESS_TB]:
         isBoth = False
         isGL = False
