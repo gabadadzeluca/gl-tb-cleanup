@@ -36,9 +36,10 @@ def extract_needed_accounts(tb_df):
 
   return acc_str[mask]
 
-def fill_excel(ws, recon_df: pd.DataFrame, company_name) -> None:
+def format_excel(ws, recon_df: pd.DataFrame, company_name) -> None:
     # Add header
     ws["A1"] = f"TB & GL Reconciliation of {company_name}" if company_name else "TB & GL Reconciliation"
+    ws["A1"].font = ws["A1"].font.copy(bold=True, size=11)
     ws["A2"] = "Reporting Date:"
 
     #Set column widths
@@ -54,7 +55,7 @@ def fill_excel(ws, recon_df: pd.DataFrame, company_name) -> None:
         adjusted_width = (max_length + 2)
         ws.column_dimensions[column].width = adjusted_width
 
-def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> None:
+def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
 
     # 1. Build the reconciliation base table (structure only)
     recon_df = build_recon_skeleton(tb_df)
@@ -68,7 +69,7 @@ def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWri
     )
 
     ws = writer.sheets[SHEET_NAME]
-    fill_excel(ws, recon_df, company_name)
+    format_excel(ws, recon_df, company_name)
 
 
     # 3. Inject Excel formulas
