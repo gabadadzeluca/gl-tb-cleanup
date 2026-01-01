@@ -11,6 +11,8 @@ layout = [
         file_types=(("Excel Files", "*.xlsx"),),  
         size=(50,1)
     )],
+    [sg.Text("Uploaded Files:")],
+    [sg.Multiline("", size=(20, 3), key=GUI_KEYS.UPLOADED_FILES, disabled=True)],
     [sg.Text("Company name: [Optional]", size=(30,1))],
     [sg.Input(
         key=GUI_KEYS.OUTPUT_NAME,
@@ -45,21 +47,21 @@ while True:
 
 
         # Split and remove empty paths
-        if values[GUI_KEYS.FILE_PATH]:
-            filepaths = values[GUI_KEYS.FILE_PATH].split(";")
-            
-            if(len(filepaths[0]) == 0):
-                sg.popup("Error", "No file selected. Please upload an Excel file.")
-                continue
-            elif(len(filepaths) > 1):
-                # temporary assignments tb 1, gl 2
-                files.tb_path = filepaths[0]
-                files.gl_path = filepaths[1]
-                print("Successfully assigned both TB and GL files.")
-            elif(len(filepaths) == 1):
-                """ Single file uploaded TEMPORARILY ASSIGN TO TB ONLY """
-                files.tb_path = filepaths[0]
-                print("Successfully assigned One File.")
+
+        filepaths = [f.strip() for f in values[GUI_KEYS.FILE_PATH].split(";") if f.strip()]
+        
+        if(len(filepaths) == 0):
+            sg.popup("Error", "No file selected. Please upload an Excel file.")
+            continue
+        elif(len(filepaths) > 1):
+            # temporary assignments tb 1, gl 2
+            files.tb_path = filepaths[0]
+            files.gl_path = filepaths[1]
+            print("Successfully assigned both TB and GL files.")
+        elif(len(filepaths) == 1):
+            """ Single file uploaded TEMPORARILY ASSIGN TO TB ONLY """
+            files.tb_path = filepaths[0]
+            print("Successfully assigned One File.")
 
 
         # Get optional file name
