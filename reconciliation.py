@@ -83,8 +83,16 @@ def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df) -> None:
       tb_desc_idx = tb_df.columns.get_loc(COLUMNS_TB["name"]) - tb_df.columns.get_loc(COLUMNS_TB["acc"]) + 1
       desc_formula = f'=IFERROR(VLOOKUP({account_col}{r},TB!${tb_acc_col}:${tb_desc_col},{tb_desc_idx}, FALSE),0)'
       ws[f"{desc_col}{r}"] = desc_formula
-  
 
+      # TB DR formula
+      tb_movement_dr_col = col_letter(tb_df, COLUMNS_TB["movement_dr"])
+      tb_dr_formula = f'=SUMIFS(TB!${tb_movement_dr_col}:${tb_movement_dr_col},TB!$A:$A,{account_col}{r})'
+      ws[f"{tb_dr_col}{r}"] = tb_dr_formula
+
+      # TB CR formula
+      tb_movement_cr_col = col_letter(tb_df, COLUMNS_TB["movement_cr"])
+      tb_cr_formula = f'=SUMIFS(TB!${tb_movement_cr_col}:${tb_movement_cr_col},TB!$A:$A,{account_col}{r})'
+      ws[f"{tb_cr_col}{r}"] = tb_cr_formula
 
 def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
 
