@@ -38,44 +38,57 @@ layout = [
 
 window = sg.Window("LedgerPrep", layout, element_justification="center")
 
+# to store uploaded files
+uploaded_files = []
+
 while True:
     event, values = window.read()
     if event in (sg.WINDOW_CLOSED, GUI_KEYS.EXIT):
         break
 
+
+    # Initialize File paths
+    files = Files()
+    files.tb_path = None
+    files.gl_path = None
+
     if event == GUI_KEYS.FILE_PATH:
         print("EVENT CALLED")
-        filepaths = [f.strip() for f in values[GUI_KEYS.FILE_PATH].split(";") if f.strip()]
-        uploaded_text = "\n".join(filepaths) if filepaths else "No file selected"
-        window[GUI_KEYS.UPLOADED_FILES].update(uploaded_text)
+       
+        # Split and remove empty paths
+        new_files = [f.strip() for f in values[GUI_KEYS.FILE_PATH].split(";") if f.strip()]
+        
+        # merge the lists and remove duplicates
+        for f in new_files:
+            if f not in uploaded_files:
+                if len(uploaded_files) < 2:
+                    uploaded_files.append(f)
+                else:
+                    sg.popup("Only 2 files can be uploaded at a time.")
+                    break
+
+        print ("ALL FILES:", uploaded_files)
+
+        # Update the input field and Multiline display
+        # window[GUI_KEYS.FILE_PATH].update(";".join(all_files))
+        window[GUI_KEYS.UPLOADED_FILES].update(
+            "\n".join([
+                f"TB: {files.tb_path}" if files.tb_path else "",
+                f"GL: {files.gl_path}" if files.gl_path else ""
+            ])
+        )
+
+        # Assign files based on names
+        for file in uploaded_files:
+            lower_file = file.lower()
+            if "tb" in lower_file:
+                files.tb_path = file
+            elif "gl" in lower_file:
+                files.gl_path = file
 
     if event in [GUI_KEYS.PROCESS_BOTH, GUI_KEYS.PROCESS_GL, GUI_KEYS.PROCESS_TB]:
-        # Initialize File paths
-        files = Files()
-        files.tb_path = None
-        files.gl_path = None
-        
         isBoth = False
         isGL = False
-
-
-        # Split and remove empty paths
-
-        filepaths = [f.strip() for f in values[GUI_KEYS.FILE_PATH].split(";") if f.strip()]
-        
-        if(len(filepaths) == 0):
-            sg.popup("Error", "No file selected. Please upload an Excel file.")
-            continue
-        elif(len(filepaths) > 1):
-            # temporary assignments tb 1, gl 2
-            files.tb_path = filepaths[0]
-            files.gl_path = filepaths[1]
-            print("Successfully assigned both TB and GL files.")
-        elif(len(filepaths) == 1):
-            """ Single file uploaded TEMPORARILY ASSIGN TO TB ONLY """
-            files.tb_path = filepaths[0]
-            print("Successfully assigned One File.")
-
 
         # Get optional file name
         output_name = values[GUI_KEYS.OUTPUT_NAME].strip()
@@ -83,14 +96,18 @@ while True:
 
         if(event == GUI_KEYS.PROCESS_BOTH):
             """ Both processing """
+            print("BOTH PROCESSING")
             isBoth = True
             isGL = False
+
+            print(f"TB: {files.tb_path}, GL: {files.gl_path}")
             # error check so that both files are uploaded
             if(not files.tb_path or not files.gl_path):
                 sg.popup("Error", "Please upload both TB and GL files to process both.")
                 continue
         else:
             """ Single processing """
+            print("SINGLE PROCESSING")
             isBoth = False
             isGL = (event == GUI_KEYS.PROCESS_GL)
 
