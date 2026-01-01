@@ -3,38 +3,51 @@ from main import main
 from models.gui_keys import GUI_KEYS
 from models.files import Files
 
-layout = [
+
+file_upload_section = sg.Column([
     [sg.Text("Select GL or TB Excel File:", size=(30,1))],
     [sg.FilesBrowse(
         "Upload File", 
         key=GUI_KEYS.FILE_PATH,
         file_types=(("Excel Files", "*.xlsx"),),  
-        size=(50,1)
+        size=(50,1),
+        enable_events=True
     )],
     [sg.Text("Uploaded Files:")],
-    [sg.Multiline("", size=(20, 3), key=GUI_KEYS.UPLOADED_FILES, disabled=True)],
+    [sg.Multiline("", size=(50, 2), key=GUI_KEYS.UPLOADED_FILES, disabled=True)],
     [sg.Text("Company name: [Optional]", size=(30,1))],
     [sg.Input(
         key=GUI_KEYS.OUTPUT_NAME,
         size=(40, 1),
         tooltip="Leave blank to use default filename"
-    )],
-    [sg.Frame("Process Options", [
-        [
-            sg.Button("Process TB", size=(15,1), key=GUI_KEYS.PROCESS_TB), 
-            sg.Button("Process GL", size=(15,1), key=GUI_KEYS.PROCESS_GL),
-            sg.Button("Process Both", size=(15,1), key=GUI_KEYS.PROCESS_BOTH)
-        ]
-    ])],
+    )]
+])
+process_section = sg.Frame("Process Options", [
+    [
+        sg.Button("Process TB", size=(15,1), key=GUI_KEYS.PROCESS_TB), 
+        sg.Button("Process GL", size=(15,1), key=GUI_KEYS.PROCESS_GL),
+        sg.Button("Process Both", size=(15,1), key=GUI_KEYS.PROCESS_BOTH)
+    ]
+])
+
+layout = [
+    [file_upload_section],
+    [process_section],
     [sg.Button("Exit", size=(10,1), key=GUI_KEYS.EXIT)]
 ]
 
-window = sg.Window("LedgerPrep", layout,  background_color="")
+window = sg.Window("LedgerPrep", layout, element_justification="center")
 
 while True:
     event, values = window.read()
     if event in (sg.WINDOW_CLOSED, GUI_KEYS.EXIT):
         break
+
+    if event == GUI_KEYS.FILE_PATH:
+        print("EVENT CALLED")
+        filepaths = [f.strip() for f in values[GUI_KEYS.FILE_PATH].split(";") if f.strip()]
+        uploaded_text = "\n".join(filepaths) if filepaths else "No file selected"
+        window[GUI_KEYS.UPLOADED_FILES].update(uploaded_text)
 
     if event in [GUI_KEYS.PROCESS_BOTH, GUI_KEYS.PROCESS_GL, GUI_KEYS.PROCESS_TB]:
         # Initialize File paths
