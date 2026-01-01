@@ -11,7 +11,7 @@ layout = [
         file_types=(("Excel Files", "*.xlsx"),),  
         size=(50,1)
     )],
-    [sg.Text("File (Company) name: [Optional]", size=(30,1))],
+    [sg.Text("Company name: [Optional]", size=(30,1))],
     [sg.Input(
         key=GUI_KEYS.OUTPUT_NAME,
         size=(40, 1),
