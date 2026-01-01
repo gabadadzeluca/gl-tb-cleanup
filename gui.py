@@ -68,16 +68,7 @@ while True:
                     break
 
         print ("ALL FILES:", uploaded_files)
-
-        # Update the input field and Multiline display
-        # window[GUI_KEYS.FILE_PATH].update(";".join(all_files))
-        window[GUI_KEYS.UPLOADED_FILES].update(
-            "\n".join([
-                f"TB: {files.tb_path}" if files.tb_path else "",
-                f"GL: {files.gl_path}" if files.gl_path else ""
-            ])
-        )
-
+        
         # Assign files based on names
         for file in uploaded_files:
             lower_file = file.lower()
@@ -85,6 +76,10 @@ while True:
                 files.tb_path = file
             elif "gl" in lower_file:
                 files.gl_path = file
+
+
+        # Update the input field and Multiline display
+        window[GUI_KEYS.UPLOADED_FILES].update("\n".join(uploaded_files))
 
     if event in [GUI_KEYS.PROCESS_BOTH, GUI_KEYS.PROCESS_GL, GUI_KEYS.PROCESS_TB]:
         isBoth = False
