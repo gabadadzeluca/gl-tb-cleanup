@@ -3,5 +3,6 @@
 *.txt
 __pycache__/
 *.pyc
-/build
 *.spec
+/build
+/dist
