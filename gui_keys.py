@@ -1,6 +1,6 @@
 # a file for keys for gui events
 
-class GUIKeys:
+class GUI_KEYS:
     PROCESS_TB = "process_tb"
     PROCESS_GL = "process_gl"
     PROCESS_RECON = "process_recon"
