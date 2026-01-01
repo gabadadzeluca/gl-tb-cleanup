@@ -2,6 +2,9 @@ import pandas as pd
 from columns_to_keep import COLUMNS_GL
 from common.cleanup import clean_df
 
+DR_LEFT = "DR_left"
+CR_LEFT = "CR_left"
+
 def add_grouping_column(df: pd.DataFrame) -> pd.DataFrame:
     # Insert an empty column at position 0 (first column)
     df.insert(0, "Grouping", "") #empty string for now
@@ -30,11 +33,11 @@ def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
     debit_geo  = COLUMNS_GL["acc_debit"]
     credit_geo = COLUMNS_GL["acc_credit"]
 
-    df.loc[:, "DR_left"] = df[debit_geo].astype(str).str[:4]
-    df.loc[:, "CR_left"] = df[credit_geo].astype(str).str[:4]
+    df.loc[:, DR_LEFT] = df[debit_geo].astype(str).str[:4]
+    df.loc[:, CR_LEFT] = df[credit_geo].astype(str).str[:4]
 
-    df = insert_after(df, debit_geo, "DR_left", df["DR_left"])
-    df = insert_after(df, credit_geo, "CR_left", df["CR_left"])
+    df = insert_after(df, debit_geo, DR_LEFT, df[DR_LEFT])
+    df = insert_after(df, credit_geo, CR_LEFT, df[CR_LEFT])
 
     return df
 
