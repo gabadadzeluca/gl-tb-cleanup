@@ -55,6 +55,16 @@ def format_excel(ws, recon_df: pd.DataFrame, company_name) -> None:
         adjusted_width = (max_length + 2)
         ws.column_dimensions[column].width = adjusted_width
 
+# column helper
+def col_letter(df, col_name):
+    return get_column_letter(df.columns.get_loc(col_name) + 1)
+
+
+def add_reconciliation_formulas(ws, recon_df: pd.DataFrame) -> None:
+    for row_idx in range(START_ROW, START_ROW + len(recon_df)):
+      ...
+
+
 def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
 
     # 1. Build the reconciliation base table (structure only)
