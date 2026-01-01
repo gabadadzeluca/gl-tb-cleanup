@@ -5,38 +5,35 @@ from common.cleanup import load_excel
 
 
 def main(files, isGL, isBoth, filename=""):   
-    tb_file , gl_file = files.tb_path, files.gl_path
+    tb_file, gl_file = files.tb_path, files.gl_path
+
     TB_OUTPUT_FILENAME = f"TB-{filename}.xlsx" if filename else "TB-cleaned.xlsx"
     GL_OUTPUT_FILENAME = f"GL-{filename}.xlsx" if filename else "GL-cleaned.xlsx"
-    
+    BOTH_OUTPUT_FILENAME = f"TB-GL-{filename}.xlsx" if filename else "TB&GL-cleaned.xlsx"
+
     try:
-        if(isGL):
-            """GL processing"""
-            gl_df = load_excel(gl_file)
+        # ---- LOAD & PROCESS ----
+        tb_df = load_excel(tb_file) if tb_file else None
+        gl_df = load_excel(gl_file) if gl_file else None
+
+        if tb_df is not None and (not isGL or isBoth):
+            tb_df = process_tb(tb_df)
+        if gl_df is not None and (isGL or isBoth):
             gl_df = process_gl(gl_df)
+
+        # ---- DECIDE OUTPUT FILENAME ----
+        if isBoth:
+            OUTPUT_FILENAME = BOTH_OUTPUT_FILENAME
+        elif isGL:
             OUTPUT_FILENAME = GL_OUTPUT_FILENAME
-        elif(not isBoth):
-            """TB processing"""
-            tb_df = load_excel(tb_file)
-            tb_df = process_tb(tb_df)
-            OUTPUT_FILENAME = TB_OUTPUT_FILENAME
         else:
-            """Both processing"""
-            tb_df = load_excel(tb_file)
-            gl_df = load_excel(gl_file)
+            OUTPUT_FILENAME = TB_OUTPUT_FILENAME
 
-            tb_df = process_tb(tb_df)
-            gl_df = process_gl(gl_df)
-            OUTPUT_FILENAME = f"TB-GL-{filename}.xlsx" if filename else "TB-GL-cleaned.xlsx"
-
-        # ---- SAVE TO WORKBOOK ----
+        # ---- SAVE TO EXCEL ----
         with pd.ExcelWriter(OUTPUT_FILENAME, engine="openpyxl", mode="w") as writer:
-            if isGL:
-                gl_df.to_excel(writer, sheet_name="GL_cleaned", index=False)
-            elif not isBoth:
+            if tb_df is not None:
                 tb_df.to_excel(writer, sheet_name="TB_cleaned", index=False)
-            else:
-                tb_df.to_excel(writer, sheet_name="TB_cleaned", index=False)
+            if gl_df is not None:
                 gl_df.to_excel(writer, sheet_name="GL_cleaned", index=False)
 
         return OUTPUT_FILENAME
