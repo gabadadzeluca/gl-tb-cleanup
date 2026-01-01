@@ -40,6 +40,10 @@ while True:
         files.tb_path = None
         files.gl_path = None
         
+        isBoth = False
+        isGL = False
+
+
         # Split and remove empty paths
         if values[GUI_KEYS.FILE_PATH]:
             filepaths = values[GUI_KEYS.FILE_PATH].split(";")
@@ -51,9 +55,12 @@ while True:
                 # temporary assignments tb 1, gl 2
                 files.tb_path = filepaths[0]
                 files.gl_path = filepaths[1]
+                print("Successfully assigned both TB and GL files.")
             elif(len(filepaths) == 1):
                 """ Single file uploaded TEMPORARILY ASSIGN TO TB ONLY """
                 files.tb_path = filepaths[0]
+                print("Successfully assigned One File.")
+
 
         # Get optional file name
         output_name = values[GUI_KEYS.OUTPUT_NAME].strip()
