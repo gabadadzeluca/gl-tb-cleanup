@@ -115,3 +115,7 @@ while True:
             sg.popup("Error", f"Processing failed:\n{e}\nPlease check the uploaded file and try again.")
 
 window.close()
+
+# TODO Add File Removal Functionality
+# TODO Improve column name mappings - NO HARDCODING
+# TODO Add progress bar for processing
