@@ -2,7 +2,7 @@ import pandas as pd
 from gl_processing import process_gl
 from tb_processing import process_tb
 from common.cleanup import load_excel
-
+from reconciliation import reconcile_data
 
 def main(files, isGL, isBoth, filename=""):   
     tb_file, gl_file = files.tb_path, files.gl_path
@@ -32,10 +32,11 @@ def main(files, isGL, isBoth, filename=""):
         # ---- SAVE TO EXCEL ----
         with pd.ExcelWriter(OUTPUT_FILENAME, engine="openpyxl", mode="w") as writer:
             if tb_df is not None:
-                tb_df.to_excel(writer, sheet_name="TB_cleaned", index=False)
+                tb_df.to_excel(writer, sheet_name="TB", index=False)
             if gl_df is not None:
-                gl_df.to_excel(writer, sheet_name="GL_cleaned", index=False)
-
+                gl_df.to_excel(writer, sheet_name="GL", index=False)
+            if tb_df is not None and gl_df is not None:
+                reconcile_data(tb_df, gl_df, writer, company_name=filename)
         return OUTPUT_FILENAME
 
     except FileNotFoundError as e:
