@@ -1,5 +1,5 @@
 import pandas as pd
-from columns_to_keep import COLUMNS_TB
+from utils.columns_to_keep import COLUMNS_TB
 from common.cleanup import clean_df
 
 ACC_LEFT = "Acc_left"

@@ -1,5 +1,5 @@
 import pandas as pd
-from columns_to_keep import COLUMNS_TB
+from utils.columns_to_keep import COLUMNS_TB
 
 # For accessing the left(4) account code
 from tb_processing import ACC_LEFT

@@ -1,5 +1,5 @@
 import pandas as pd
-from columns_to_keep import COLUMNS_GL
+from utils.columns_to_keep import COLUMNS_GL
 from common.cleanup import clean_df
 
 DR_LEFT = "DR_left"

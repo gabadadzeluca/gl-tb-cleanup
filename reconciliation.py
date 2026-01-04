@@ -1,8 +1,8 @@
 import pandas as pd
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Border, Side
-from columns_to_keep import COLUMNS_GL
-from columns_to_keep import COLUMNS_TB
+from utils.columns_to_keep import COLUMNS_GL
+from utils.columns_to_keep import COLUMNS_TB
 from gl_processing import DR_LEFT, CR_LEFT
 
 START_ROW = 4  # leaves rows 1–3 free for headers
