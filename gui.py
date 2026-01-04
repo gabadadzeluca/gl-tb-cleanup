@@ -4,6 +4,36 @@ from models.gui_keys import GUI_KEYS
 from models.files import Files
 from theme import *
 
+# Kinda like global styles
+sg.theme_background_color(BG_MAIN)
+sg.theme_element_background_color(BG_COLUMN)
+sg.theme_text_color(TEXT_PRIMARY)
+sg.theme_button_color(BTN_EXIT)
+
+def show_styled_popup(title, message, is_error=True):
+    """
+    Displays a themed popup. 
+    is_error=True (1): Uses Red theme
+    is_error=False (0): Uses Green theme
+    """
+    # Determine style based on the is_error boolean
+    btn_color = BTN_REMOVE if is_error else BTN_PROCESS_SINGLE
+    
+    sg.popup(
+        message,
+        title=title,
+        background_color=BG_MAIN,
+        text_color=TEXT_PRIMARY,
+        button_color=btn_color,
+        font=FONT_TEXT,
+        no_titlebar=False,
+        keep_on_top=True,
+        line_width=60,
+        any_key_closes=True,
+        icon=None
+    )
+
+
 file_upload_section = sg.Column([
     [sg.Text("Select GL or TB Excel File:", font=(FONT_TEXT[0], 12, 'bold'), text_color=TEXT_PRIMARY, background_color=BG_COLUMN)],
     [sg.FilesBrowse(
@@ -107,7 +137,7 @@ while True:
                 if len(uploaded_files) < 2:
                     uploaded_files.append(f)
                 else:
-                    sg.popup("Only 2 files can be uploaded at a time.")
+                    show_styled_popup("File Capacity Reached", "Only 2 files can be uploaded at a time.")
                     break
 
         # Assign files based on names
@@ -138,7 +168,7 @@ while True:
             isGL = False
             # error check so that both files are uploaded
             if(not files.tb_path or not files.gl_path):
-                sg.popup("Error", "Please upload both TB and GL files to process both.")
+                show_styled_popup("Missing Files", "Please upload both TB and GL files to process both.")
                 continue
         else:
             """ Single processing """
@@ -147,12 +177,8 @@ while True:
 
         try:
             output_file = main(files, isGL, isBoth, output_name)
-            sg.popup("Processing Complete!",
-                    f"The clean Excel file is ready:\n{output_file}")
+            show_styled_popup("Processing Complete!", f"The clean Excel file is ready:\n{output_file}", is_error=False)
         except Exception as e:
-            sg.popup("Error", f"Processing failed:\n{e}\nPlease check the uploaded file and try again.")
+            show_styled_popup("Error", f"Processing failed:\n{e}\nPlease check the uploaded file and try again.")
 
 window.close()
-
-# TODO Improve column name mappings - NO HARDCODING
-# TODO Add progress bar for processing
