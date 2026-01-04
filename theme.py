@@ -1,7 +1,7 @@
 # Background colors
-BG_MAIN = "#1E1E1E"        # dark gray window background
-BG_COLUMN = "#2A2A2A"      # slightly lighter for panels/cards
-BG_LISTBOX = "#252525"      # dark for list boxes
+BG_MAIN = "#1E1E1E"
+BG_COLUMN = "#1E1E1E"
+BG_LISTBOX = "#252525"
 
 # Text colors
 TEXT_PRIMARY = "#E0E0E0"    # soft off-white
