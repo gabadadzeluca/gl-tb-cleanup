@@ -2,45 +2,74 @@ import FreeSimpleGUI as sg
 from main import main
 from models.gui_keys import GUI_KEYS
 from models.files import Files
-
+from theme import *
 
 file_upload_section = sg.Column([
-    [sg.Text("Select GL or TB Excel File:", size=(30,1))],
+    [sg.Text("Select GL or TB Excel File:", font=(FONT_TEXT[0], 12, 'bold'), text_color=TEXT_PRIMARY, background_color=BG_COLUMN)],
     [sg.FilesBrowse(
         "Upload File", 
         key=GUI_KEYS.FILE_PATH,
         file_types=(("Excel Files", "*.xlsx"),),  
-        size=(50,1),
-        enable_events=True
+        size=(45,1),
+        font=FONT_BUTTON,
+        button_color=BTN_UPLOAD,
+        enable_events=True,
+        pad=(0, (10, 20))
     )],
 
-    [sg.Text("Uploaded Files:")],
-    [sg.Listbox(values=[], size=(50,4), key=GUI_KEYS.UPLOADED_FILES, enable_events=True, no_scrollbar=True)],
-    [sg.Button("Remove Selected File", key=GUI_KEYS.REMOVE_FILE)],
+    [sg.Text("Uploaded Files:", font=FONT_TEXT, text_color=TEXT_PRIMARY, background_color=BG_COLUMN)],
+    [sg.Listbox(
+        values=[], size=(45,2), key=GUI_KEYS.UPLOADED_FILES, enable_events=True,
+        no_scrollbar=True,
+        font=FONT_INPUT,
+        background_color=BG_LISTBOX,
+        text_color=TEXT_PRIMARY,
+        pad=(0, (5, 10)),
+    )],
+    [sg.Push(background_color=BG_COLUMN), sg.Button("Remove Selected", key=GUI_KEYS.REMOVE_FILE, font=("Segoe UI", 9), button_color=BTN_REMOVE, size=(15, 1))],
+    
+    # Visual break
+    [sg.HSeparator(pad=(0, 20))],
 
-    [sg.Text("Company name: [Optional]", size=(30,1))],
+    [sg.Text("Company name: [Optional]", font=FONT_TEXT, text_color=TEXT_PRIMARY, background_color=BG_COLUMN)],
     [sg.Input(
         key=GUI_KEYS.OUTPUT_NAME,
-        size=(40, 1),
-        tooltip="Leave blank to use default filename"
+        size=(46, 1),
+        font=FONT_INPUT,
+        pad=(0, (5, 15)),
+        background_color=BG_LISTBOX,
+        text_color=TEXT_PRIMARY
     )]
-])
-process_section = sg.Frame("Process Options", [
-    [
-        sg.Button("Process TB", size=(15,1), key=GUI_KEYS.PROCESS_TB), 
-        sg.Button("Process GL", size=(15,1), key=GUI_KEYS.PROCESS_GL),
-        sg.Button("Process Both", size=(15,1), key=GUI_KEYS.PROCESS_BOTH)
-    ]
-])
+], pad=PAD_SECTION, background_color=BG_COLUMN)
+
+process_section = sg.Frame(
+    " Process Options ", [
+        [
+            sg.Button("Process TB", size=(12,1), key=GUI_KEYS.PROCESS_TB, font=FONT_BUTTON, button_color=BTN_PROCESS_SINGLE),
+            sg.Button("Process GL", size=(12,1), key=GUI_KEYS.PROCESS_GL, font=FONT_BUTTON, button_color=BTN_PROCESS_SINGLE),
+            sg.Button("Process Both", size=(12,1), key=GUI_KEYS.PROCESS_BOTH, font=FONT_BUTTON, button_color=BTN_PROCESS_BOTH)
+        ]
+    ],
+    pad=(0, 20), 
+    title_color=TEXT_SECONDARY,
+    background_color=BG_COLUMN
+)
 
 layout = [
     [file_upload_section],
     [process_section],
-    [sg.Button("Exit", size=(10,1), key=GUI_KEYS.EXIT)]
+    [sg.Button("Exit", size=(10,1), key=GUI_KEYS.EXIT, font=FONT_BUTTON, border_width=0, button_color=BTN_EXIT, pad=(0, 10))]
 ]
 
-window = sg.Window("LedgerPrep", layout, element_justification="center")
-
+window = sg.Window(
+    "LedgerPrep",
+    layout,
+    element_justification="center",
+    margins=(20,20),
+    resizable=True,
+    background_color=BG_MAIN,
+    font=FONT_TEXT
+)
 # to store uploaded files
 uploaded_files = []
 
