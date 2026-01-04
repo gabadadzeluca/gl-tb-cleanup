@@ -35,7 +35,7 @@ def main(files, isGL, isBoth, filename=""):
                 tb_df.to_excel(writer, sheet_name="TB", index=False)
             if gl_df is not None:
                 gl_df.to_excel(writer, sheet_name="GL", index=False)
-            if tb_df is not None and gl_df is not None:
+            if tb_df is not None and gl_df is not None and isBoth:
                 reconcile_data(tb_df, gl_df, writer, company_name=filename)
         return OUTPUT_FILENAME
 
