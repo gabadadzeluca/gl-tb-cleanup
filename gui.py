@@ -13,8 +13,11 @@ file_upload_section = sg.Column([
         size=(50,1),
         enable_events=True
     )],
+
     [sg.Text("Uploaded Files:")],
-    [sg.Multiline("", size=(50, 2), key=GUI_KEYS.UPLOADED_FILES, disabled=True)],
+    [sg.Listbox(values=[], size=(50,4), key=GUI_KEYS.UPLOADED_FILES, enable_events=True, no_scrollbar=True)],
+    [sg.Button("Remove Selected File", key=GUI_KEYS.REMOVE_FILE)],
+
     [sg.Text("Company name: [Optional]", size=(30,1))],
     [sg.Input(
         key=GUI_KEYS.OUTPUT_NAME,
@@ -51,11 +54,21 @@ while True:
     event, values = window.read()
     if event in (sg.WINDOW_CLOSED, GUI_KEYS.EXIT):
         break
+    
+    """Handle File Removal"""
+    if event == GUI_KEYS.REMOVE_FILE:
+        selected_names = values[GUI_KEYS.UPLOADED_FILES]
+        if selected_names:
+            uploaded_files = [f for f in uploaded_files if f.split("/")[-1] not in selected_names]
+            # reassign tb/gl paths if needed
+            files.tb_path = next((f for f in uploaded_files if "tb" in f.lower()), None)
+            files.gl_path = next((f for f in uploaded_files if "gl" in f.lower()), None)
+            # update display again
+            window[GUI_KEYS.UPLOADED_FILES].update([f.split("/")[-1] for f in uploaded_files])
+
 
     """Handle File Uploads"""
     if event == GUI_KEYS.FILE_PATH:
-        print("EVENT CALLED")
-       
         # Split and remove empty paths
         new_files = [f.strip() for f in values[GUI_KEYS.FILE_PATH].split(";") if f.strip()]
         
@@ -68,8 +81,6 @@ while True:
                     sg.popup("Only 2 files can be uploaded at a time.")
                     break
 
-        print ("ALL FILES:", uploaded_files)
-        
         # Assign files based on names
         for file in uploaded_files:
             print("Processing a file:", file)
@@ -79,9 +90,9 @@ while True:
             if "gl" in lower_file:
                 files.gl_path = file
 
-        print("TB PATH: ", files.tb_path, "GL PATH: ", files.gl_path)
         # Update the input field and Multiline display
-        window[GUI_KEYS.UPLOADED_FILES].update("\n".join(uploaded_files))
+        display_names = [f.split("/")[-1] for f in uploaded_files] 
+        window[GUI_KEYS.UPLOADED_FILES].update(display_names)
 
     """Handle Processing Events"""
     if event in [GUI_KEYS.PROCESS_BOTH, GUI_KEYS.PROCESS_GL, GUI_KEYS.PROCESS_TB]:
@@ -94,7 +105,6 @@ while True:
 
         if(event == GUI_KEYS.PROCESS_BOTH):
             """ Both processing """
-            print("BOTH PROCESSING")
             isBoth = True
             isGL = False
             # error check so that both files are uploaded
@@ -103,7 +113,6 @@ while True:
                 continue
         else:
             """ Single processing """
-            print("SINGLE PROCESSING")
             isBoth = False
             isGL = (event == GUI_KEYS.PROCESS_GL)
 
@@ -116,6 +125,5 @@ while True:
 
 window.close()
 
-# TODO Add File Removal Functionality
 # TODO Improve column name mappings - NO HARDCODING
 # TODO Add progress bar for processing
