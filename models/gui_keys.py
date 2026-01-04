@@ -8,3 +8,4 @@ class GUI_KEYS:
     FILE_PATH = "file_path"
     PROCESS_BOTH = "process_both"
     UPLOADED_FILES = "uploaded_files"
+    REMOVE_FILE = "remove_file"
