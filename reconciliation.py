@@ -125,14 +125,14 @@ def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> Non
 			ws[f"{check_dr_col}{r}"] = f"={tb_dr_col}{r}-{gl_dr_col}{r}"
 			ws[f"{check_cr_col}{r}"] = f"={tb_cr_col}{r}-{gl_cr_col}{r}"
       
-			# Apply Sylfaen 12 to the whole row
+			# Single loop for formatting
 			for col_idx in range(1, len(recon_df.columns) + 1):
 					cell = ws.cell(row=r, column=col_idx)
+					col_letter_here = get_column_letter(col_idx)
 					cell.font = sylfaen_font
-			
-			# Apply Number Format only to the numeric columns
-			for col_let in numeric_cols:
-					ws[f"{col_let}{r}"].number_format = num_format
+					if col_letter_here in numeric_cols:
+							cell.number_format = num_format
+							cell.font = Font(name='Arial', size=10)
 
 
 def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
