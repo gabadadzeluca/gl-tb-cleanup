@@ -9,9 +9,9 @@ TEXT_SECONDARY = "#B0B0B0"  # muted gray for secondary info
 
 # Button colors
 BTN_UPLOAD = ("#FFFFFF", "#4A90E2")       # calm blue
-BTN_REMOVE = ("#FFFFFF", "#944E4E")       # muted red
+BTN_REMOVE = ("#FFFFFF", "#95a5a6")       # muted gray
 BTN_PROCESS_SINGLE = ("#FFFFFF", "#5AA469") # soft green
-BTN_PROCESS_BOTH = ("#FFFFFF", "#E1A101")   # warm amber
+BTN_PROCESS_BOTH = ("#FFFFFF", "#007bff")   # warm blue
 BTN_EXIT = ("#FFFFFF", "#7D7D7D")         # neutral gray
 
 # Fonts
