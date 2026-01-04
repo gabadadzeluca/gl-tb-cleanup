@@ -2,7 +2,7 @@ import pandas as pd
 from utils.columns_to_keep import COLUMNS_TB
 
 # For accessing the left(4) account code
-from tb_processing import ACC_LEFT
+from core.tb_processing import ACC_LEFT
 
 # Test for now
 PPE_PREFIXES = ['163','21']
