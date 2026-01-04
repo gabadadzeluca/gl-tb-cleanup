@@ -2,7 +2,7 @@ import pandas as pd
 from core.gl_processing import process_gl
 from core.tb_processing import process_tb
 from common.cleanup import load_excel
-from reconciliation import reconcile_data
+from core.reconciliation import reconcile_data
 
 def main(files, isGL, isBoth, filename=""):   
     tb_file, gl_file = files.tb_path, files.gl_path
