@@ -83,6 +83,10 @@ def get_gl_movement(ws, direction: str, gl_df, account_col: str, target_col: str
 
     ws[f"{target_col}{r}"] = gl_formula
 
+def add_sum_row(ws, r, check_dr_col, check_cr_col, first_data_row, last_data_row) -> None:
+			ws[f"{check_dr_col}{r+1}"] = f"=SUM({check_dr_col}{first_data_row}:{check_dr_col}{last_data_row})"
+			ws[f"{check_cr_col}{r+1}"].border = Border(top=Side(border_style="thick"))
+
 def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> None:
 	#Pre define styles
 	sylfaen_font = Font(name='Sylfaen', size=10)
@@ -125,6 +129,11 @@ def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> Non
 			ws[f"{check_dr_col}{r}"] = f"={tb_dr_col}{r}-{gl_dr_col}{r}"
 			ws[f"{check_cr_col}{r}"] = f"={tb_cr_col}{r}-{gl_cr_col}{r}"
       
+			# add single SUM row at the end for checks
+			if r == last_data_row:
+					add_sum_row(ws, r, check_dr_col, check_cr_col, first_data_row, last_data_row)
+					add_sum_row(ws, r, check_cr_col, check_dr_col, first_data_row, last_data_row)
+                                   
 			# Single loop for formatting
 			for col_idx in range(1, len(recon_df.columns) + 1):
 					cell = ws.cell(row=r, column=col_idx)
