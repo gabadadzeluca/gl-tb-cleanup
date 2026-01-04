@@ -3,7 +3,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Border, Side
 from utils.columns_to_keep import COLUMNS_GL
 from utils.columns_to_keep import COLUMNS_TB
-from gl_processing import DR_LEFT, CR_LEFT
+from core.gl_processing import DR_LEFT, CR_LEFT
 
 START_ROW = 4  # leaves rows 1–3 free for headers
 SHEET_NAME = "TB&GL Reconciliation"

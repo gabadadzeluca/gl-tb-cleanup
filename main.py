@@ -1,5 +1,5 @@
 import pandas as pd
-from gl_processing import process_gl
+from core.gl_processing import process_gl
 from tb_processing import process_tb
 from common.cleanup import load_excel
 from reconciliation import reconcile_data
