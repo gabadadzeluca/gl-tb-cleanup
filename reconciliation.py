@@ -1,6 +1,6 @@
 import pandas as pd
 from openpyxl.utils import get_column_letter
-from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
+from openpyxl.styles import Font, Border, Side
 from columns_to_keep import COLUMNS_GL
 from columns_to_keep import COLUMNS_TB
 from gl_processing import DR_LEFT, CR_LEFT
@@ -85,7 +85,7 @@ def get_gl_movement(ws, direction: str, gl_df, account_col: str, target_col: str
 
 def add_sum_row(ws, r, check_dr_col, check_cr_col, first_data_row, last_data_row) -> None:
 			ws[f"{check_dr_col}{r+1}"] = f"=SUM({check_dr_col}{first_data_row}:{check_dr_col}{last_data_row})"
-			ws[f"{check_cr_col}{r+1}"].border = Border(top=Side(border_style="thick"))
+			ws[f"{check_cr_col}{r+1}"].border = Border(top=Side(border_style="thin"))
 
 def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> None:
 	#Pre define styles
@@ -145,7 +145,6 @@ def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> Non
 
 
 def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
-
     # 1. Build the reconciliation base table (structure only)
     recon_df = build_recon_skeleton(tb_df)
 
@@ -159,7 +158,6 @@ def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWri
 
     ws = writer.sheets[SHEET_NAME]
     format_excel(ws, recon_df, company_name)
-
 
     # 3. Inject Excel formulas
     add_reconciliation_formulas(ws, recon_df, tb_df, gl_df)
