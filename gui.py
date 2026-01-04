@@ -75,9 +75,9 @@ file_upload_section = sg.Column([
 process_section = sg.Frame(
     " Process Options ", [
         [
-            sg.Button("Process TB", size=(12,1), key=GUI_KEYS.PROCESS_TB, font=FONT_BUTTON, button_color=BTN_PROCESS_SINGLE),
-            sg.Button("Process GL", size=(12,1), key=GUI_KEYS.PROCESS_GL, font=FONT_BUTTON, button_color=BTN_PROCESS_SINGLE),
-            sg.Button("Process Both", size=(12,1), key=GUI_KEYS.PROCESS_BOTH, font=FONT_BUTTON, button_color=BTN_PROCESS_BOTH)
+            sg.Button("Process TB", size=(12,2), key=GUI_KEYS.PROCESS_TB, font=FONT_BUTTON, button_color=BTN_PROCESS_SINGLE),
+            sg.Button("Process GL", size=(12,2), key=GUI_KEYS.PROCESS_GL, font=FONT_BUTTON, button_color=BTN_PROCESS_SINGLE),
+            sg.Button("Process Both & Reconcile", size=(12,2), key=GUI_KEYS.PROCESS_BOTH, font=FONT_BUTTON, button_color=BTN_PROCESS_BOTH)
         ]
     ],
     pad=(0, 20), 
