@@ -88,6 +88,14 @@ process_section = sg.Frame(
 layout = [
     [file_upload_section],
     [process_section],
+    [# Note for the 3rd option 
+        sg.Text(
+            "Note: Include 'TB' & 'GL' in filenames for the 'Process Both' option", 
+            font=(FONT_TEXT, 7, 'italic'), 
+            background_color=BG_COLUMN,
+            text_color=TEXT_SECONDARY, 
+        )
+    ],
     [sg.Button("Exit", size=(10,1), key=GUI_KEYS.EXIT, font=FONT_BUTTON, border_width=0, button_color=BTN_EXIT, pad=(0, 10))]
 ]
 
