@@ -1,5 +1,6 @@
 import pandas as pd
 from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from columns_to_keep import COLUMNS_GL
 from columns_to_keep import COLUMNS_TB
 from gl_processing import DR_LEFT, CR_LEFT
@@ -36,10 +37,9 @@ def extract_needed_accounts(tb_df):
 
   return acc_str[mask]
 
-def format_excel(ws, recon_df: pd.DataFrame, company_name) -> None:
-    # Add header
+def format_excel(ws, recon_df: pd.DataFrame, company_name) -> None:    # Add header
     ws["A1"] = f"TB & GL Reconciliation of {company_name}" if company_name else "TB & GL Reconciliation"
-    ws["A1"].font = ws["A1"].font.copy(bold=True, size=11)
+    ws["A1"].font = Font(name='Sylfaen', size=12, bold=True)
     ws["A2"] = "Reporting Date:"
 
     #Set column widths
@@ -84,39 +84,55 @@ def get_gl_movement(ws, direction: str, gl_df, account_col: str, target_col: str
     ws[f"{target_col}{r}"] = gl_formula
 
 def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> None:
-  first_data_row = START_ROW + 1
-  last_data_row = START_ROW + len(recon_df)
-  print("FIRST DATA ROW:", first_data_row, "\n last data row:", last_data_row)
+	#Pre define styles
+	sylfaen_font = Font(name='Sylfaen', size=10)
+	num_format = '#,##0;[Red](#,##0);-'
 
-  account_col = col_letter(recon_df, "Account")
-  desc_col = col_letter(recon_df, "Description")
-  
-  tb_dr_col = col_letter(recon_df, "Movement DR (TB)")
-  tb_cr_col = col_letter(recon_df, "Movement CR (TB)")
-  gl_dr_col = col_letter(recon_df, "Movement DR (GL)")
-  gl_cr_col = col_letter(recon_df, "Movement CR (GL)")
-  
-  check_dr_col = col_letter(recon_df, "Check DR")
-  check_cr_col = col_letter(recon_df, "Check CR")
+	# Apply styles to data rows
+	first_data_row = START_ROW + 1
+	last_data_row = START_ROW + len(recon_df)
+	print("FIRST DATA ROW:", first_data_row, "\n last data row:", last_data_row)
 
-  for r in range(first_data_row, last_data_row + 1):
-      # Description formula: VLOOKUP from TB first
-      tb_acc_col  = col_letter(tb_df, COLUMNS_TB["acc"])
-      tb_desc_col = col_letter(tb_df, COLUMNS_TB["name"])
-      tb_desc_idx = tb_df.columns.get_loc(COLUMNS_TB["name"]) - tb_df.columns.get_loc(COLUMNS_TB["acc"]) + 1
-      desc_formula = f'=IFERROR(VLOOKUP({account_col}{r},TB!${tb_acc_col}:${tb_desc_col},{tb_desc_idx}, FALSE),0)'
-      ws[f"{desc_col}{r}"] = desc_formula
+	account_col = col_letter(recon_df, "Account")
+	desc_col = col_letter(recon_df, "Description")
 
-      # TB Movement formulas
-      get_tb_movemenet(ws, "dr", tb_df, account_col, tb_dr_col, r)
-      get_tb_movemenet(ws, "cr", tb_df, account_col, tb_cr_col, r)
+	tb_dr_col = col_letter(recon_df, "Movement DR (TB)")
+	tb_cr_col = col_letter(recon_df, "Movement CR (TB)")
+	gl_dr_col = col_letter(recon_df, "Movement DR (GL)")
+	gl_cr_col = col_letter(recon_df, "Movement CR (GL)")
 
-      get_gl_movement(ws, "dr", gl_df, account_col,  gl_dr_col, r)
-      get_gl_movement(ws, "cr", gl_df, account_col,  gl_cr_col, r)
+	check_dr_col = col_letter(recon_df, "Check DR")
+	check_cr_col = col_letter(recon_df, "Check CR")
+	
+	numeric_cols = [tb_dr_col, tb_cr_col, gl_dr_col, gl_cr_col, check_dr_col, check_cr_col]
+	
+	for r in range(first_data_row, last_data_row + 1):
+			# Description formula: VLOOKUP from TB first
+			tb_acc_col  = col_letter(tb_df, COLUMNS_TB["acc"])
+			tb_desc_col = col_letter(tb_df, COLUMNS_TB["name"])
+			tb_desc_idx = tb_df.columns.get_loc(COLUMNS_TB["name"]) - tb_df.columns.get_loc(COLUMNS_TB["acc"]) + 1
+			desc_formula = f'=IFERROR(VLOOKUP({account_col}{r},TB!${tb_acc_col}:${tb_desc_col},{tb_desc_idx}, FALSE),0)'
+			ws[f"{desc_col}{r}"] = desc_formula
 
-      # Check movements
-      ws[f"{check_dr_col}{r}"] = f"={tb_dr_col}{r}-{gl_dr_col}{r}"
-      ws[f"{check_cr_col}{r}"] = f"={tb_cr_col}{r}-{gl_cr_col}{r}"
+			# TB Movement formulas
+			get_tb_movemenet(ws, "dr", tb_df, account_col, tb_dr_col, r)
+			get_tb_movemenet(ws, "cr", tb_df, account_col, tb_cr_col, r)
+
+			get_gl_movement(ws, "dr", gl_df, account_col,  gl_dr_col, r)
+			get_gl_movement(ws, "cr", gl_df, account_col,  gl_cr_col, r)
+
+			# Check movements
+			ws[f"{check_dr_col}{r}"] = f"={tb_dr_col}{r}-{gl_dr_col}{r}"
+			ws[f"{check_cr_col}{r}"] = f"={tb_cr_col}{r}-{gl_cr_col}{r}"
+      
+			# Apply Sylfaen 12 to the whole row
+			for col_idx in range(1, len(recon_df.columns) + 1):
+					cell = ws.cell(row=r, column=col_idx)
+					cell.font = sylfaen_font
+			
+			# Apply Number Format only to the numeric columns
+			for col_let in numeric_cols:
+					ws[f"{col_let}{r}"].number_format = num_format
 
 
 def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
