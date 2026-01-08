@@ -158,7 +158,7 @@ def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWri
     )
 
     ws = writer.sheets[SHEET_NAME]
-    format_excel(ws, recon_df, company_name)
+    format_excel(ws, company_name)
 
     # 3. Inject Excel formulas
     add_reconciliation_formulas(ws, recon_df, tb_df, gl_df)
