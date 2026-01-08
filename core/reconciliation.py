@@ -37,7 +37,7 @@ def extract_needed_accounts(tb_df):
 
   return acc_str[mask]
 
-def format_excel(ws, recon_df: pd.DataFrame, company_name) -> None:    # Add header
+def format_excel(ws, company_name) -> None:    # Add header
     ws["A1"] = f"TB & GL Reconciliation of {company_name}" if company_name else "TB & GL Reconciliation"
     ws["A1"].font = Font(name='Arial', size=12, bold=True)
     ws["A2"] = "Reporting Date:"
