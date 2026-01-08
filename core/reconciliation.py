@@ -39,7 +39,7 @@ def extract_needed_accounts(tb_df):
 
 def format_excel(ws, recon_df: pd.DataFrame, company_name) -> None:    # Add header
     ws["A1"] = f"TB & GL Reconciliation of {company_name}" if company_name else "TB & GL Reconciliation"
-    ws["A1"].font = Font(name='Sylfaen', size=12, bold=True)
+    ws["A1"].font = Font(name='Arial', size=12, bold=True)
     ws["A2"] = "Reporting Date:"
 
     #Set column widths
@@ -89,7 +89,7 @@ def add_sum_row(ws, r, check_dr_col, check_cr_col, first_data_row, last_data_row
 
 def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> None:
 	#Pre define styles
-	sylfaen_font = Font(name='Sylfaen', size=10)
+	arial_font = Font(name='Arial', size=10)
 	num_format = '#,##0;[Red](#,##0);-'
 
 	# Apply styles to data rows
@@ -138,7 +138,7 @@ def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> Non
 			for col_idx in range(1, len(recon_df.columns) + 1):
 					cell = ws.cell(row=r, column=col_idx)
 					col_letter_here = get_column_letter(col_idx)
-					cell.font = sylfaen_font
+					cell.font = arial_font
 					if col_letter_here in numeric_cols:
 							cell.number_format = num_format
 							cell.font = Font(name='Arial', size=10)
