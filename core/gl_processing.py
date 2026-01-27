@@ -1,5 +1,5 @@
 import pandas as pd
-from utils.columns_to_keep import COLUMNS_GL
+from utils.columns_to_keep import COLUMNS_GL_1C, COLUMNS_GL_2C
 from common.cleanup import clean_df
 
 DR_LEFT = "DR_left"
@@ -41,7 +41,12 @@ def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-def process_gl(df: pd.DataFrame) -> pd.DataFrame:
+def process_gl(df: pd.DataFrame, is_1C_format: bool) -> pd.DataFrame:
+    if(is_1C_format):
+        COLUMNS_GL = COLUMNS_GL_1C
+    else:
+        COLUMNS_GL = COLUMNS_GL_2C
+    
     df = clean_df(df, col_map=COLUMNS_GL)
     df = add_left_account_codes(df)
     df = add_grouping_column(df)
