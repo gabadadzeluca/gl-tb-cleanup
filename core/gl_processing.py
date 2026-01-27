@@ -26,7 +26,7 @@ def insert_after(df: pd.DataFrame, after_col: str, new_col: str, values):
     df = df[cols]
     return df
 
-def add_left_account_codes(df: pd.DataFrame) -> pd.DataFrame:
+def add_left_account_codes(df: pd.DataFrame, COLUMNS_GL:dict[str, str]) -> pd.DataFrame:
     df = df.copy() # copy to prevent an error
     
     # add DR_left and CR_left based on first 4 characters.
@@ -48,6 +48,6 @@ def process_gl(df: pd.DataFrame, is_1C_format: bool) -> pd.DataFrame:
         COLUMNS_GL = COLUMNS_GL_2C
     
     df = clean_df(df, col_map=COLUMNS_GL)
-    df = add_left_account_codes(df)
+    df = add_left_account_codes(df, COLUMNS_GL)
     df = add_grouping_column(df)
     return df
