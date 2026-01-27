@@ -22,6 +22,12 @@ def parse_dates(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
     date_geo = col_map.get("date")
 
     if date_geo in df.columns:
+        # check if it is in 01.01.2025 0:00:00 format;
+        if(df[date_geo].dtype == 'datetime64[ns]'):
+            # If in datetime format, convert to date only and return
+            df[date_geo] = df[date_geo].dt.date
+            return df
+        
         df[date_geo] = pd.to_datetime(
         df[date_geo].astype(str).str.strip(),
         format="%d/%m/%Y",
