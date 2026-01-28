@@ -1,7 +1,7 @@
 import pandas as pd
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Border, Side
-from utils.columns_to_keep import COLUMNS_GL
+from utils.columns_to_keep import COLUMNS_GL_2C as COLUMNS_GL # 2C FOR NOW ONLY TODO!!!
 from utils.columns_to_keep import COLUMNS_TB
 from core.gl_processing import DR_LEFT, CR_LEFT
 
