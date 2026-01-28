@@ -11,6 +11,8 @@ def main(files, isGL, isBoth, filename=""):
     GL_OUTPUT_FILENAME = f"GL-{filename}.xlsx" if filename else "GL-cleaned.xlsx"
     BOTH_OUTPUT_FILENAME = f"TB-GL-{filename}.xlsx" if filename else "TB&GL-cleaned.xlsx"
 
+    is_1C_format = True # add this variable for now; add detection logic later TODO
+
     try:
         # ---- LOAD & PROCESS ----
         tb_df = load_excel(tb_file) if tb_file else None
@@ -19,7 +21,7 @@ def main(files, isGL, isBoth, filename=""):
         if tb_df is not None and (not isGL or isBoth):
             tb_df = process_tb(tb_df)
         if gl_df is not None and (isGL or isBoth):
-            gl_df = process_gl(gl_df)
+            gl_df = process_gl(gl_df, is_1C_format=is_1C_format)
 
         # ---- DECIDE OUTPUT FILENAME ----
         if isBoth:
