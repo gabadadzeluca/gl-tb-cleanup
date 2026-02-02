@@ -4,6 +4,9 @@ COLUMNS_GL_2C = {
     "name_debit": "დასახელება (დებ.)",
     "acc_credit": "საკრედ.ანგარიში",
     "description": "დანიშნულება",
+    "name_credit": "დასახელება (კრედ.)",
+    "amount": "თანხა",
+    "basis": "საფუძველი",
 }
 
 COLUMNS_GL_1C = {
