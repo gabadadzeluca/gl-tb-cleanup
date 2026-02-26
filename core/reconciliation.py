@@ -26,7 +26,7 @@ def extract_needed_accounts(tb_df):
 
 	# Convert numeric Excel accounts (float or int) to integer strings
 	# Leave other values (already strings) as-is
-	acc_str = acc_str.apply(lambda x: str(int(x)) if isinstance(x, (float, int)) else str(x))
+	acc_str = acc_str.apply(lambda x: str(int(x)) if pd.notnull(x) and isinstance(x, (float, int)) else str(x))
 
 	# Strip spaces and normalize to uppercase
 	acc_str = acc_str.str.strip().str.upper()
