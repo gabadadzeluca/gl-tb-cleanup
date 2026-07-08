@@ -41,8 +41,8 @@ def add_left_account_codes(df: pd.DataFrame, COLUMNS_GL:dict[str, str]) -> pd.Da
 
     return df
 
-def process_gl(df: pd.DataFrame, is_1C_format: bool) -> pd.DataFrame:
-    if(is_1C_format):
+def process_gl(df: pd.DataFrame, is_1c_format: bool) -> pd.DataFrame:
+    if(is_1c_format):
         COLUMNS_GL = COLUMNS_GL_1C
     else:
         COLUMNS_GL = COLUMNS_GL_2C
