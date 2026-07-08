@@ -4,14 +4,12 @@ from core.tb_processing import process_tb
 from common.cleanup import load_excel
 from core.reconciliation import reconcile_data
 
-def main(files, isGL, isBoth, filename=""):   
+def main(files, isGL, isBoth, filename="", is_1c_format=False):   
     tb_file, gl_file = files.tb_path, files.gl_path
 
     TB_OUTPUT_FILENAME = f"TB-{filename}.xlsx" if filename else "TB-cleaned.xlsx"
     GL_OUTPUT_FILENAME = f"GL-{filename}.xlsx" if filename else "GL-cleaned.xlsx"
     BOTH_OUTPUT_FILENAME = f"TB-GL-{filename}.xlsx" if filename else "TB&GL-cleaned.xlsx"
-
-    is_1C_format = True # add this variable for now; add detection logic later TODO
 
     try:
         # ---- LOAD & PROCESS ----
@@ -21,7 +19,7 @@ def main(files, isGL, isBoth, filename=""):
         if tb_df is not None and (not isGL or isBoth):
             tb_df = process_tb(tb_df)
         if gl_df is not None and (isGL or isBoth):
-            gl_df = process_gl(gl_df, is_1C_format=is_1C_format)
+            gl_df = process_gl(gl_df, is_1c_format=is_1c_format)
 
         # ---- DECIDE OUTPUT FILENAME ----
         if isBoth:
