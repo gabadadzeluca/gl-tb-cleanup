@@ -1,7 +1,8 @@
 import pandas as pd
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Border, Side
-from utils.columns_to_keep import COLUMNS_GL_1C as COLUMNS_GL # 1C FOR NOW ONLY TODO!!!
+from utils.columns_to_keep import COLUMNS_GL_2C;
+from utils.columns_to_keep import COLUMNS_GL_1C;
 from utils.columns_to_keep import COLUMNS_TB
 from core.gl_processing import DR_LEFT, CR_LEFT
 
@@ -73,13 +74,17 @@ def get_tb_movemenet(ws, direction: str, tb_df, account_col: str, tb_m_col: str,
 		tb_m_formula = f'=SUMIFS(TB!${m_col}:${m_col},TB!$A:$A,{account_col}{r})'
 		ws[f"{tb_m_col}{r}"] = tb_m_formula
 
-def get_gl_movement(ws, direction: str, gl_df, account_col: str, target_col: str, r: int) -> None:
+def get_gl_movement(ws, direction: str, gl_df, account_col: str, target_col: str, r: int, is_1c_format) -> None:
 		# Pick the correct column in GL based on direction
 		# DO not use GL_COLUMNS bc those left columns are manually added
 		if direction.lower() == "dr":
 				gl_account_col = col_letter(gl_df, DR_LEFT)
 		elif direction.lower() == "cr":
 				gl_account_col = col_letter(gl_df, CR_LEFT)
+		
+		COLUMNS_GL = COLUMNS_GL_2C
+		if(is_1c_format==True):
+			COLUMNS_GL = COLUMNS_GL_1C
 
 		# GL Amount column
 		gl_amount_col = col_letter(gl_df, COLUMNS_GL["amount"])
@@ -95,7 +100,7 @@ def add_sum_row(ws, r, check_dr_col, check_cr_col, first_data_row, last_data_row
 			ws[f"{check_dr_col}{r+1}"] = f"=SUM({check_dr_col}{first_data_row}:{check_dr_col}{last_data_row})"
 			ws[f"{check_cr_col}{r+1}"].border = Border(top=Side(border_style="thin"))
 
-def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> None:
+def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df, is_1c_format) -> None:
 	#Pre define styles
 	arial_font = Font(name='Arial', size=10)
 	num_format = '#,##0;[Red](#,##0);-'
@@ -130,8 +135,8 @@ def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> Non
 			get_tb_movemenet(ws, "dr", tb_df, account_col, tb_dr_col, r)
 			get_tb_movemenet(ws, "cr", tb_df, account_col, tb_cr_col, r)
 
-			get_gl_movement(ws, "dr", gl_df, account_col,  gl_dr_col, r)
-			get_gl_movement(ws, "cr", gl_df, account_col,  gl_cr_col, r)
+			get_gl_movement(ws, "dr", gl_df, account_col,  gl_dr_col, r, is_1c_format)
+			get_gl_movement(ws, "cr", gl_df, account_col,  gl_cr_col, r, is_1c_format)
 
 			# Check movements
 			ws[f"{check_dr_col}{r}"] = f"={tb_dr_col}{r}-{gl_dr_col}{r}"
@@ -152,7 +157,7 @@ def add_reconciliation_formulas(ws, recon_df: pd.DataFrame, tb_df, gl_df) -> Non
 							cell.font = Font(name='Arial', size=10)
 
 
-def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name) -> pd.DataFrame:
+def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWriter, company_name, is_1c_format) -> pd.DataFrame:
 		# 1. Build the reconciliation base table (structure only)
 		recon_df = build_recon_skeleton(tb_df)
 
@@ -168,5 +173,5 @@ def reconcile_data(tb_df: pd.DataFrame, gl_df: pd.DataFrame, writer: pd.ExcelWri
 		format_excel(ws, company_name)
 
 		# 3. Inject Excel formulas
-		add_reconciliation_formulas(ws, recon_df, tb_df, gl_df)
+		add_reconciliation_formulas(ws, recon_df, tb_df, gl_df, is_1c_format)
 		return recon_df # test
