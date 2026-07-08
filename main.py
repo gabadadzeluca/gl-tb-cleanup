@@ -4,7 +4,7 @@ from core.tb_processing import process_tb
 from common.cleanup import load_excel
 from core.reconciliation import reconcile_data
 
-def main(files, isGL, isBoth, filename=""):   
+def main(files, isGL, isBoth, filename="", is_1c_format=False):   
     tb_file, gl_file = files.tb_path, files.gl_path
 
     TB_OUTPUT_FILENAME = f"TB-{filename}.xlsx" if filename else "TB-cleaned.xlsx"
@@ -19,7 +19,7 @@ def main(files, isGL, isBoth, filename=""):
         if tb_df is not None and (not isGL or isBoth):
             tb_df = process_tb(tb_df)
         if gl_df is not None and (isGL or isBoth):
-            gl_df = process_gl(gl_df)
+            gl_df = process_gl(gl_df, is_1c_format=is_1c_format)
 
         # ---- DECIDE OUTPUT FILENAME ----
         if isBoth:
@@ -36,7 +36,7 @@ def main(files, isGL, isBoth, filename=""):
             if gl_df is not None:
                 gl_df.to_excel(writer, sheet_name="GL", index=False)
             if tb_df is not None and gl_df is not None and isBoth:
-                reconcile_data(tb_df, gl_df, writer, company_name=filename)
+                reconcile_data(tb_df, gl_df, writer, company_name=filename, is_1c_format=is_1c_format)
         return OUTPUT_FILENAME
 
     except FileNotFoundError as e:

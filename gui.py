@@ -47,6 +47,8 @@ file_upload_section = sg.Column([
         pad=(0, (10, 20))
     )],
 
+    [sg.Checkbox("1C Format", key=GUI_KEYS.IS_1C_FORMAT, background_color=BG_COLUMN, text_color=TEXT_PRIMARY)],
+
     [sg.Text("Uploaded Files:", font=FONT_TEXT, text_color=TEXT_PRIMARY, background_color=BG_COLUMN)],
     [sg.Listbox(
         values=[], size=(45,2), key=GUI_KEYS.UPLOADED_FILES, enable_events=True,
@@ -165,6 +167,7 @@ while True:
     if event in [GUI_KEYS.PROCESS_BOTH, GUI_KEYS.PROCESS_GL, GUI_KEYS.PROCESS_TB]:
         isBoth = False
         isGL = False
+        is_1c_format = values[GUI_KEYS.IS_1C_FORMAT]
 
         # Get optional file name
         output_name = values[GUI_KEYS.OUTPUT_NAME].strip()
@@ -184,7 +187,7 @@ while True:
             isGL = (event == GUI_KEYS.PROCESS_GL)
 
         try:
-            output_file = main(files, isGL, isBoth, output_name)
+            output_file = main(files, isGL, isBoth, output_name, is_1c_format)
             show_styled_popup("Processing Complete!", f"The clean Excel file is ready:\n{output_file}", is_error=False)
         except Exception as e:
             show_styled_popup("Error", f"Processing failed:\n{e}\nPlease check the uploaded file and try again.")

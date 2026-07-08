@@ -18,15 +18,14 @@ def filter_columns(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
 
 def parse_dates(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
     df = df.copy()  # avoid SettingWithCopyWarning
-    #Convert date column to datetime original format DD/MM/YYYY
     date_geo = col_map.get("date")
 
     if date_geo in df.columns:
         df[date_geo] = pd.to_datetime(
-        df[date_geo].astype(str).str.strip(),
-        format="%d/%m/%Y",
-        errors="coerce"
-    ).dt.date
+            df[date_geo].astype(str).str.strip(),
+            dayfirst=True,
+            errors="coerce"
+        ).dt.date
 
     return df
 

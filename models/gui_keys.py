@@ -9,3 +9,4 @@ class GUI_KEYS:
     PROCESS_BOTH = "process_both"
     UPLOADED_FILES = "uploaded_files"
     REMOVE_FILE = "remove_file"
+    IS_1C_FORMAT = "is_1c_format"
