@@ -36,7 +36,7 @@ def main(files, isGL, isBoth, filename="", is_1c_format=False):
             if gl_df is not None:
                 gl_df.to_excel(writer, sheet_name="GL", index=False)
             if tb_df is not None and gl_df is not None and isBoth:
-                reconcile_data(tb_df, gl_df, writer, company_name=filename)
+                reconcile_data(tb_df, gl_df, writer, company_name=filename, is_1c_format=is_1c_format)
         return OUTPUT_FILENAME
 
     except FileNotFoundError as e:
