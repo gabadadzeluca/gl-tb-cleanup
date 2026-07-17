@@ -21,12 +21,10 @@ def parse_dates(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
     date_geo = col_map.get("date")
 
     if date_geo in df.columns:
-        df[date_geo] = pd.to_datetime(
-            df[date_geo].astype(str).str.strip(),
-            dayfirst=True,
-            errors="coerce"
-        ).dt.date
-
+        col = df[date_geo]
+        if not pd.api.types.is_datetime64_any_dtype(col):
+            col = pd.to_datetime(col.astype(str).str.strip(), dayfirst=True, errors="coerce")
+        df[date_geo] = col.dt.date
     return df
 
 def add_month_column(df: pd.DataFrame, col_map: dict[str, str]) -> pd.DataFrame:
